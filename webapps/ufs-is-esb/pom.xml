@@ -70,7 +70,6 @@
               <sources>
                 <source>src/main/resources/xsd/as_fs.xsd</source>
               </sources>
-              <clearOutputDir>false</clearOutputDir>
             </configuration>
           </execution>
           <execution>
@@ -83,6 +82,7 @@
               <sources>
                 <source>src/main/resources/xsd/eks.xsd</source>
               </sources>
+              <clearOutputDir>false</clearOutputDir>
             </configuration>
           </execution>
           <execution>
