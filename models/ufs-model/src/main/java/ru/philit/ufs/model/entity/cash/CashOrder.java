@@ -14,46 +14,46 @@ import java.math.BigDecimal;
 @Setter
 public class CashOrder extends ExternalEntity {
 
-    protected String cashOrderId;
-    protected String cashOrderINum;
-    protected String accountId;
-    protected CashOrderStatusType cashOrderStatus;
-    protected BigDecimal amount;
+    private String cashOrderId;
+    private String cashOrderINum;
+    private String accountId;
+    private CashOrderStatusType cashOrderStatus;
+    private BigDecimal amount;
 
     //SrvCreateCashOrderRqMessage
     //SrvUpdCashOrderRqMessage
-    protected OperTypeLabel operationType;
-    protected String amountInWords;
-    protected String currencyType;
-    protected String workPlaceUId;
+    private OperTypeLabel operationType;
+    private String amountInWords;
+    private String currencyType;
+    private String workPlaceUId;
 
     //SrvCreateCashOrderRsMessage (ko1)
     //SrvUpdCashOrderRsMessage
-    protected String responseCode;
-    protected String responseMsg;
-    protected CashOrderType cashOrderType;
-    protected XMLGregorianCalendar createdDttm;
-    protected String operationId;
-    protected String repFIO;
-    protected String legalEntityShortName;
-    protected String inn;
-    protected String senderBank;
-    protected String senderBankBIC;
-    protected String recipientBank;
-    protected String recipientBankBIC;
-    protected Boolean clientTypeFK;
-    protected String fDestLEName;
-    protected String operatorPosition;
-    protected String userFullName;
-    protected String userPosition;
+    private String responseCode;
+    private String responseMsg;
+    private CashOrderType cashOrderType;
+    private XMLGregorianCalendar createdDttm;
+    private String operationId;
+    private String repFIO;
+    private String legalEntityShortName;
+    private String inn;
+    private String senderBank;
+    private String senderBankBIC;
+    private String recipientBank;
+    private String recipientBankBIC;
+    private Boolean clientTypeFK;
+    private String fDestLEName;
+    private String operatorPosition;
+    private String userFullName;
+    private String userPosition;
 
     //AdditionalInfo
-    protected String comment;
-    protected String subbranchCode;
-    protected String vspCode;
-    protected String osbCode;
-    protected String gosbCode;
-    protected String tbCode;
-    protected String account20202Num;
-    protected String userLogin;
+    private String comment;
+    private String subbranchCode;
+    private String vspCode;
+    private String osbCode;
+    private String gosbCode;
+    private String tbCode;
+    private String account20202Num;
+    private String userLogin;
 }
