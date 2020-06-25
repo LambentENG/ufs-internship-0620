@@ -2,6 +2,8 @@ package ru.philit.ufs.model.entity.cash;
 
 import lombok.*;
 import ru.philit.ufs.model.entity.common.ExternalEntity;
+import ru.philit.ufs.model.entity.user.Subbranch;
+
 import javax.xml.datatype.XMLGregorianCalendar;
 import java.math.BigDecimal;
 
@@ -36,7 +38,7 @@ public class CashOrder extends ExternalEntity {
     private String operationId;
     private String repFIO;
     private String legalEntityShortName;
-    private String inn;
+
     private String senderBank;
     private String senderBankBIC;
     private String recipientBank;
@@ -49,11 +51,7 @@ public class CashOrder extends ExternalEntity {
 
     //AdditionalInfo
     private String comment;
-    private String subbranchCode;
-    private String vspCode;
-    private String osbCode;
-    private String gosbCode;
-    private String tbCode;
     private String account20202Num;
     private String userLogin;
+    private Subbranch subbranch;
 }
