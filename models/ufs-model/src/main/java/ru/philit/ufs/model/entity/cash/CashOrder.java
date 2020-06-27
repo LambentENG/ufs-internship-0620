@@ -1,16 +1,15 @@
 package ru.philit.ufs.model.entity.cash;
 
 import lombok.*;
-import ru.philit.ufs.model.entity.common.ExternalEntity;
-import ru.philit.ufs.model.entity.user.Subbranch;
-
-import javax.xml.datatype.XMLGregorianCalendar;
 import java.math.BigDecimal;
+import javax.xml.datatype.XMLGregorianCalendar;
+import ru.philit.ufs.model.entity.common.ExternalEntity;
+import ru.philit.ufs.model.entity.oper.CashSymbol;
+import ru.philit.ufs.model.entity.user.Subbranch;
 
 /**
  * Кассовый ордер операции.
  */
-@EqualsAndHashCode(of = {"id"}, callSuper = false)
 @ToString
 @Getter
 @Setter
@@ -38,7 +37,6 @@ public class CashOrder extends ExternalEntity {
     private String operationId;
     private String repFIO;
     private String legalEntityShortName;
-
     private String senderBank;
     private String senderBankBIC;
     private String recipientBank;
@@ -48,10 +46,19 @@ public class CashOrder extends ExternalEntity {
     private String operatorPosition;
     private String userFullName;
     private String userPosition;
+    private CashSymbol cashSymbol;
 
     //AdditionalInfo
     private String comment;
     private String account20202Num;
     private String userLogin;
     private Subbranch subbranch;
+
+    /**
+     * Конструктор Кассового ордера.
+     */
+    public CashOrder() {
+        this.subbranch = new Subbranch();
+        this.cashSymbol = new CashSymbol();
+    }
 }
