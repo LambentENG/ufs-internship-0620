@@ -8,8 +8,6 @@ import ru.philit.ufs.model.entity.esb.asfs.SrvCreateCashOrderRq;
 import ru.philit.ufs.model.entity.esb.asfs.SrvCreateCashOrderRs;
 import ru.philit.ufs.model.entity.esb.asfs.SrvUpdStCashOrderRq;
 import ru.philit.ufs.model.entity.esb.asfs.SrvUpdStCashOrderRs;
-import ru.philit.ufs.model.entity.oper.CashSymbol;
-
 
 public class CashOrderAdapter extends AsfsAdapter {
 
@@ -52,14 +50,13 @@ public class CashOrderAdapter extends AsfsAdapter {
         cashOrder.setUserFullName(message.getUserFullName());
         cashOrder.setUserPosition(message.getUserPosition());
         map(message.getCashSymbols(), cashOrder);
-
-    }
+        }
 
     private static void map(SrvCreateCashOrderRs.SrvCreateCashOrderRsMessage.KO1.CashSymbols cashSymbols, CashOrder cashOrder) {
         cashOrder.getCashSymbol().setCode(cashSymbols.getCashSymbolItem().toString());
     }
 
-    private static void map(SrvCreateCashOrderRs.SrvCreateCashOrderRsMessage.KO1 .CashSymbols.CashSymbolItem cashSymbolItem, CashOrder cashOrder) {
+    protected static void map(SrvCreateCashOrderRs.SrvCreateCashOrderRsMessage.KO1.CashSymbols.CashSymbolItem cashSymbolItem, CashOrder cashOrder) {
         cashOrder.getCashSymbol().setCode(cashSymbolItem.getCashSymbol());
         cashOrder.getCashSymbol().setAmount(cashSymbolItem.getCashSymbolAmount());
         cashOrder.getCashSymbol().setDescription(cashSymbolItem.getCashSymbol());
@@ -79,22 +76,22 @@ public class CashOrderAdapter extends AsfsAdapter {
     /**
      * Возвращает объект запроса создания кассового ордера.
      */
-    public static SrvCreateCashOrderRq createCashOrderRq(String cashOrder) {
+    public static SrvCreateCashOrderRq createCashOrderRq(CashOrder cashOrder) {
         SrvCreateCashOrderRq request = new SrvCreateCashOrderRq();
         request.setHeaderInfo(headerInfo());
         request.setSrvCreateCashOrderRqMessage(new SrvCreateCashOrderRq.SrvCreateCashOrderRqMessage());
-        request.getSrvCreateCashOrderRqMessage().setCashOrderId(cashOrder);
+        request.getSrvCreateCashOrderRqMessage().setCashOrderId(cashOrder.getCashOrderId());
         return request;
     }
 
     /**
      * Возвращает объект запроса обновления кассового ордера.
      */
-    public static SrvUpdStCashOrderRq updStCashOrderRq(String cashOrder) {
+    public static SrvUpdStCashOrderRq updStCashOrderRq(CashOrder cashOrder) {
         SrvUpdStCashOrderRq request = new SrvUpdStCashOrderRq();
         request.setHeaderInfo(headerInfo());
         request.setSrvUpdCashOrderRqMessage(new SrvUpdStCashOrderRq.SrvUpdCashOrderRqMessage());
-        request.getSrvUpdCashOrderRqMessage().setCashOrderId(cashOrder);
+        request.getSrvUpdCashOrderRqMessage().setCashOrderId(cashOrder.getCashOrderId());
         return request;
     }
 
