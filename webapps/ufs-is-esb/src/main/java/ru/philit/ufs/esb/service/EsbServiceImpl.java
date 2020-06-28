@@ -12,6 +12,7 @@ import ru.philit.ufs.esb.ReceiveMessageListener;
 import ru.philit.ufs.esb.client.EsbClient;
 import ru.philit.ufs.model.cache.IsEsbCache;
 import ru.philit.ufs.model.converter.esb.JaxbConverter;
+import ru.philit.ufs.model.converter.esb.asfs.CashOrderAdapter;
 import ru.philit.ufs.model.converter.esb.eks.AccountAdapter;
 import ru.philit.ufs.model.converter.esb.eks.CheckFraudAdapter;
 import ru.philit.ufs.model.converter.esb.eks.CommissionAdapter;
@@ -28,8 +29,11 @@ import ru.philit.ufs.model.converter.esb.pprb.OperatorAdapter;
 import ru.philit.ufs.model.converter.esb.pprb.RepresentativeAdapter;
 import ru.philit.ufs.model.entity.account.AccountOperationRequest;
 import ru.philit.ufs.model.entity.account.RepresentativeRequest;
+import ru.philit.ufs.model.entity.cash.CashOrder;
 import ru.philit.ufs.model.entity.common.ExternalEntity;
 import ru.philit.ufs.model.entity.common.ExternalEntityRequest;
+import ru.philit.ufs.model.entity.esb.asfs.SrvCreateCashOrderRq;
+import ru.philit.ufs.model.entity.esb.asfs.SrvUpdStCashOrderRq;
 import ru.philit.ufs.model.entity.esb.eks.SrvAccountByCardNumRq;
 import ru.philit.ufs.model.entity.esb.eks.SrvAccountByIdRq;
 import ru.philit.ufs.model.entity.esb.eks.SrvAccountResiduesByIdRq;
@@ -71,16 +75,18 @@ public class EsbServiceImpl
 
   private static final Logger logger = LoggerFactory.getLogger(EsbServiceImpl.class);
 
+  private static final String ASFS_CONTEXT_PATH = "ru.philit.ufs.model.entity.esb.asfs";
   private static final String EKS_CONTEXT_PATH = "ru.philit.ufs.model.entity.esb.eks";
   private static final String PPRB_CONTEXT_PATH = "ru.philit.ufs.model.entity.esb.pprb";
 
   private final EsbClient esbClient;
   private final IsEsbCache isEsbCache;
 
+  private final JaxbConverter asfsConverter = new JaxbConverter(ASFS_CONTEXT_PATH);
   private final JaxbConverter eksConverter = new JaxbConverter(EKS_CONTEXT_PATH);
   private final JaxbConverter pprbConverter = new JaxbConverter(PPRB_CONTEXT_PATH);
   private final List<JaxbConverter> jaxbConverters = ImmutableList.of(
-      eksConverter, pprbConverter
+          asfsConverter, eksConverter, pprbConverter
   );
 
   @Autowired
@@ -325,6 +331,26 @@ public class EsbServiceImpl
           }
           break;
 
+        case RequestType.CREATE_CASH_ORDER:
+          if (isCashOrderRequest(entityRequest)) {
+            SrvCreateCashOrderRq request = CashOrderAdapter.createCashOrderRq(
+                    (CashOrder) entityRequest.getRequestData());
+            isEsbCache.putRequest(request.getHeaderInfo().getRqUID(), entityRequest);
+            esbClient.sendMessage(asfsConverter.getXml(request));
+          }
+          break;
+
+        case RequestType.UPDATE_CASH_ORDER_STATUS:
+          if (isCashOrderRequest(entityRequest)) {
+            SrvUpdStCashOrderRq request = CashOrderAdapter.updStCashOrderRq(
+                    (CashOrder) entityRequest.getRequestData());
+            isEsbCache.putRequest(request.getHeaderInfo().getRqUID(), entityRequest);
+            esbClient.sendMessage(asfsConverter.getXml(request));
+          }
+          break;
+
+
+
         default:
           logger.error("Sending ExternalEntityRequest with unknown entityType {}",
               entityRequest.getEntityType());
@@ -385,6 +411,12 @@ public class EsbServiceImpl
     return entityRequest.getRequestData() != null
         && entityRequest.getRequestData() instanceof CashSymbolRequest;
   }
+
+  private boolean isCashOrderRequest(ExternalEntityRequest entityRequest) {
+    return entityRequest.getRequestData() != null
+            && entityRequest.getRequestData() instanceof CashOrder;
+  }
+
 
   /**
    * ОБработчик события приходя сообщения из КСШ с целью отправки данных запрашивающему модулю.
