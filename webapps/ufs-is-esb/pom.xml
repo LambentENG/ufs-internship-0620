@@ -73,7 +73,7 @@
         <version>${jaxb.plugin.version}</version>
         <executions>
           <execution>
-            <id>asfx.xsd</id>
+            <id>asfs.xsd</id>
             <goals>
               <goal>xjc</goal>
             </goals>
