@@ -3,12 +3,12 @@ package ru.philit.ufs.model.entity.cash;
 /**
  * Статус кассового ордера.
  */
-public enum CashOrderStatusType {
+public enum CashOrderStatus {
   CREATED("Created"),
   COMMITTED("Committed");
   private final String value;
 
-  CashOrderStatusType(String v) {
+  CashOrderStatus(String v) {
     value = v;
   }
 
@@ -19,8 +19,8 @@ public enum CashOrderStatusType {
   /**
    * Метод возвращающий статус кассового ордера.
    */
-  public static CashOrderStatusType fromValue(String v) {
-    for (CashOrderStatusType c : CashOrderStatusType.values()) {
+  public static CashOrderStatus fromValue(String v) {
+    for (CashOrderStatus c : CashOrderStatus.values()) {
       if (c.value.equals(v)) {
         return c;
       }

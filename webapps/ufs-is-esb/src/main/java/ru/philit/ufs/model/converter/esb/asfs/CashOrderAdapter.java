@@ -1,9 +1,8 @@
 package ru.philit.ufs.model.converter.esb.asfs;
 
 import ru.philit.ufs.model.entity.cash.CashOrder;
-import ru.philit.ufs.model.entity.cash.CashOrderStatusType;
+import ru.philit.ufs.model.entity.cash.CashOrderStatus;
 import ru.philit.ufs.model.entity.cash.CashOrderType;
-import ru.philit.ufs.model.entity.cash.OperTypeLabel;
 import ru.philit.ufs.model.entity.esb.asfs.SrvCreateCashOrderRq;
 import ru.philit.ufs.model.entity.esb.asfs.SrvCreateCashOrderRs;
 import ru.philit.ufs.model.entity.esb.asfs.SrvUpdStCashOrderRq;
@@ -13,16 +12,12 @@ public class CashOrderAdapter extends AsfsAdapter {
 
   //******** Converters ********
 
-  private static CashOrderStatusType cashOrderStatus(String cashOrderStatus) {
-    return (cashOrderStatus != null) ? CashOrderStatusType.valueOf(cashOrderStatus) : null;
+  private static CashOrderStatus cashOrderStatus(String cashOrderStatus) {
+    return (cashOrderStatus != null) ? CashOrderStatus.valueOf(cashOrderStatus) : null;
   }
 
   private static CashOrderType cashOrderType(String cashOrderType) {
     return (cashOrderType != null) ? CashOrderType.valueOf(cashOrderType) : null;
-  }
-
-  private static OperTypeLabel operationType(String operationType) {
-    return (operationType != null) ? OperTypeLabel.valueOf(operationType) : null;
   }
 
   //******** Mappers *******
@@ -35,7 +30,7 @@ public class CashOrderAdapter extends AsfsAdapter {
     cashOrder.setCashOrderINum(message.getCashOrderINum());
     cashOrder.setCashOrderStatus(cashOrderStatus(message.getCashOrderStatus().value()));
     cashOrder.setCashOrderType(cashOrderType(message.getCashOrderType().value()));
-    cashOrder.setCreatedDttm(message.getCreatedDttm());
+    cashOrder.setCreatedDttm(date(message.getCreatedDttm()));
     cashOrder.setOperationId(message.getOperationId());
     cashOrder.setRepFio(message.getRepFIO());
     cashOrder.setLegalEntityShortName(message.getLegalEntityShortName());

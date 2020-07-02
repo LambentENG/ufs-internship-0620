@@ -1,7 +1,7 @@
 package ru.philit.ufs.model.entity.cash;
 
 import java.math.BigDecimal;
-import javax.xml.datatype.XMLGregorianCalendar;
+import java.util.Date;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -21,12 +21,11 @@ public class CashOrder extends ExternalEntity {
   private String cashOrderId;
   private String cashOrderINum;
   private String accountId;
-  private CashOrderStatusType cashOrderStatus;
+  private CashOrderStatus cashOrderStatus;
   private BigDecimal amount;
 
   //SrvCreateCashOrderRqMessage
   //SrvUpdCashOrderRqMessage
-  private OperTypeLabel operationType;
   private String amountInWords;
   private String currencyType;
   private String workPlaceUId;
@@ -36,7 +35,7 @@ public class CashOrder extends ExternalEntity {
   private String responseCode;
   private String responseMsg;
   private CashOrderType cashOrderType;
-  private XMLGregorianCalendar createdDttm;
+  private Date createdDttm;
   private String operationId;
   private String repFio;
   private String legalEntityShortName;

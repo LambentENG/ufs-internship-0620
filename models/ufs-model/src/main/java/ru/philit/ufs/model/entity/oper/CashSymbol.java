@@ -20,4 +20,6 @@ public class CashSymbol extends ExternalEntity {
   private BigDecimal amount;
   private String description;
 
+
+
 }
