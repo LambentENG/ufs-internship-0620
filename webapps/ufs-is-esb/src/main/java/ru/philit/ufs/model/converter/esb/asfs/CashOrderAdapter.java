@@ -3,21 +3,28 @@ package ru.philit.ufs.model.converter.esb.asfs;
 import ru.philit.ufs.model.entity.cash.CashOrder;
 import ru.philit.ufs.model.entity.cash.CashOrderStatus;
 import ru.philit.ufs.model.entity.cash.CashOrderType;
+import ru.philit.ufs.model.entity.esb.asfs.CashOrderStatusType;
 import ru.philit.ufs.model.entity.esb.asfs.SrvCreateCashOrderRq;
+import ru.philit.ufs.model.entity.esb.asfs.SrvCreateCashOrderRq.SrvCreateCashOrderRqMessage;
 import ru.philit.ufs.model.entity.esb.asfs.SrvCreateCashOrderRs;
 import ru.philit.ufs.model.entity.esb.asfs.SrvUpdStCashOrderRq;
+import ru.philit.ufs.model.entity.esb.asfs.SrvUpdStCashOrderRq.SrvUpdCashOrderRqMessage;
 import ru.philit.ufs.model.entity.esb.asfs.SrvUpdStCashOrderRs;
 
 public class CashOrderAdapter extends AsfsAdapter {
 
   //******** Converters ********
 
-  private static CashOrderStatus cashOrderStatus(String cashOrderStatus) {
-    return (cashOrderStatus != null) ? CashOrderStatus.valueOf(cashOrderStatus) : null;
+  private static CashOrderStatus cashOrderStatus(CashOrderStatusType cashOrderStatus) {
+    return (cashOrderStatus != null) ? CashOrderStatus.fromValue(cashOrderStatus.value()) : null;
   }
 
-  private static CashOrderType cashOrderType(String cashOrderType) {
-    return (cashOrderType != null) ? CashOrderType.valueOf(cashOrderType) : null;
+  private static CashOrderStatusType cashOrderStatusType(String cashOrderStatus) {
+    return (cashOrderStatus != null) ? CashOrderStatusType.fromValue(cashOrderStatus) : null;
+  }
+
+  private static CashOrderType cashOrderType(String cashOrder) {
+    return (cashOrder != null) ? CashOrderType.fromValue(cashOrder) : null;
   }
 
   //******** Mappers *******
@@ -28,7 +35,7 @@ public class CashOrderAdapter extends AsfsAdapter {
     cashOrder.setResponseMsg(message.getResponseMsg());
     cashOrder.setCashOrderId(message.getCashOrderId());
     cashOrder.setCashOrderINum(message.getCashOrderINum());
-    cashOrder.setCashOrderStatus(cashOrderStatus(message.getCashOrderStatus().value()));
+    cashOrder.setCashOrderStatus(cashOrderStatus(message.getCashOrderStatus()));
     cashOrder.setCashOrderType(cashOrderType(message.getCashOrderType().value()));
     cashOrder.setCreatedDttm(date(message.getCreatedDttm()));
     cashOrder.setOperationId(message.getOperationId());
@@ -63,14 +70,31 @@ public class CashOrderAdapter extends AsfsAdapter {
     cashOrder.getCashSymbol().setDescription(cashSymbolItem.getCashSymbol());
   }
 
-  private static void map(SrvUpdStCashOrderRs.SrvUpdCashOrderRsMessage message,
+  private static void map(
+      SrvUpdStCashOrderRs.SrvUpdCashOrderRsMessage message,
       CashOrder cashOrder) {
     cashOrder.setResponseCode(message.getResponseCode());
     cashOrder.setResponseMsg(message.getResponseMsg());
     cashOrder.setCashOrderId(message.getCashOrderId());
     cashOrder.setCashOrderINum(message.getCashOrderINum());
-    cashOrder.setCashOrderStatus(cashOrderStatus(message.getCashOrderStatus().value()));
+    cashOrder.setCashOrderStatus(cashOrderStatus(message.getCashOrderStatus()));
     cashOrder.setCashOrderType(cashOrderType(message.getCashOrderType().value()));
+  }
+
+  private static void map(CashOrder cashOrder, SrvCreateCashOrderRqMessage message) {
+    message.setCashOrderId(cashOrder.getCashOrderId());
+    message.setCashOrderINum(cashOrder.getCashOrderINum());
+    message.setAccountId(cashOrder.getAccountId());
+    message.setAmount(cashOrder.getAmount());
+    message.setAmountInWords(cashOrder.getAmountInWords());
+    message.setCurrencyType(cashOrder.getCurrencyType());
+    message.setCashOrderStatus(cashOrderStatusType(cashOrder.getCashOrderStatus().value()));
+    message.setWorkPlaceUId(cashOrder.getWorkPlaceUId());
+  }
+
+  private static void map(CashOrder cashOrder, SrvUpdCashOrderRqMessage message) {
+    message.setCashOrderId(cashOrder.getCashOrderId());
+    message.setCashOrderStatus(cashOrderStatusType(cashOrder.getCashOrderStatus().value()));
   }
 
   //******** Methods *******
@@ -81,8 +105,8 @@ public class CashOrderAdapter extends AsfsAdapter {
   public static SrvCreateCashOrderRq createCashOrderRq(CashOrder cashOrder) {
     SrvCreateCashOrderRq request = new SrvCreateCashOrderRq();
     request.setHeaderInfo(headerInfo());
-    request.setSrvCreateCashOrderRqMessage(new SrvCreateCashOrderRq.SrvCreateCashOrderRqMessage());
-    request.getSrvCreateCashOrderRqMessage().setCashOrderId(cashOrder.getCashOrderId());
+    request.setSrvCreateCashOrderRqMessage(new SrvCreateCashOrderRqMessage());
+    map(cashOrder, request.getSrvCreateCashOrderRqMessage());
     return request;
   }
 
@@ -92,8 +116,8 @@ public class CashOrderAdapter extends AsfsAdapter {
   public static SrvUpdStCashOrderRq updStCashOrderRq(CashOrder cashOrder) {
     SrvUpdStCashOrderRq request = new SrvUpdStCashOrderRq();
     request.setHeaderInfo(headerInfo());
-    request.setSrvUpdCashOrderRqMessage(new SrvUpdStCashOrderRq.SrvUpdCashOrderRqMessage());
-    request.getSrvUpdCashOrderRqMessage().setCashOrderId(cashOrder.getCashOrderId());
+    request.setSrvUpdCashOrderRqMessage(new SrvUpdCashOrderRqMessage());
+    map(cashOrder, request.getSrvUpdCashOrderRqMessage());
     return request;
   }
 

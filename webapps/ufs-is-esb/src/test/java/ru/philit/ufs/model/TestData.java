@@ -8,6 +8,8 @@ import ru.philit.ufs.model.converter.esb.eks.EksAdapterBaseTest;
 import ru.philit.ufs.model.entity.account.Account;
 import ru.philit.ufs.model.entity.account.AccountType;
 import ru.philit.ufs.model.entity.account.AccountancyType;
+import ru.philit.ufs.model.entity.cash.CashOrder;
+import ru.philit.ufs.model.entity.cash.CashOrderStatus;
 import ru.philit.ufs.model.entity.common.ExternalEntityRequest;
 import ru.philit.ufs.model.entity.esb.eks.SrvAccountByCardNumRs;
 import ru.philit.ufs.model.entity.esb.eks.SrvAccountByCardNumRs.SrvAccountByCardNumRsMessage;
@@ -23,10 +25,23 @@ public class TestData {
   public static final String ACCOUNT_ID = "111111";
   public static final String LEGAL_ENTITY_ID = "112";
   public static final String AGREEMENT_ID = "45678";
+  public static final String CASH_ORDER_ID = "1111";
 
   public static final String ACCOUNT_TYPE_ID = "01";
   public static final String ACCOUNT_STATUS = "status1";
   public static final int ACCOUNTANCY_TYPE_ID = 2;
+  public static final CashOrderStatus CASH_ORDER_STATUS = CashOrderStatus.CREATED;
+  public static final String CASH_ORDER_INUM = "19011987";
+  public static final String RESPONSE_MSG = "ResponseMsg";
+  public static final String RESPONSE_CODE = "ResponseCode";
+  public static final String FDESTLENAME = "FDestLEName";
+  public static final String OPERATOR_POSITION = "OperatorPosition";
+  public static final String USER_FULL_NAME = "UserFullName";
+  public static final String USER_POSITION = "UserPosition";
+  public static final String OPERATION_ID = "7767";
+
+  public static final String REP_FIO = "RepFIO";
+  public static final String LEGAL_ENTITY_SHORT_NAME = "legalEntityShortName";
 
   public static final String BANK_BIC = "04857512";
   public static final String BANK_NAME = "Отделение № 2";
@@ -74,6 +89,8 @@ public class TestData {
   private ExternalEntityRequest accountByCardNumberRequest;
   @Getter
   private Account account;
+  @Getter
+  private CashOrder cashOrder;
   @Getter
   private SrvAccountByCardNumRs accountResponse;
 
@@ -156,5 +173,7 @@ public class TestData {
     accountIdentity.setID("112255");
     accountIdentity.setIDtype("Unknown identity");
     accountResponse.getSrvAccountByCardNumRsMessage().setAccountIdentity(accountIdentity);
+
+    cashOrder = new CashOrder();
   }
 }
