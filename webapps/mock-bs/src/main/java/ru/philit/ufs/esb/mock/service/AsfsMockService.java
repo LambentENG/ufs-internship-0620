@@ -13,6 +13,7 @@ import ru.philit.ufs.model.cache.MockCache;
 import ru.philit.ufs.model.converter.esb.JaxbConverter;
 import ru.philit.ufs.model.entity.esb.asfs.CashOrderStatusType;
 import ru.philit.ufs.model.entity.esb.asfs.CashOrderType;
+import ru.philit.ufs.model.entity.esb.asfs.HeaderInfoType;
 import ru.philit.ufs.model.entity.esb.asfs.SrvCreateCashOrderRq;
 import ru.philit.ufs.model.entity.esb.asfs.SrvCreateCashOrderRs;
 import ru.philit.ufs.model.entity.esb.asfs.SrvCreateCashOrderRs.SrvCreateCashOrderRsMessage;
@@ -21,8 +22,6 @@ import ru.philit.ufs.model.entity.esb.asfs.SrvCreateCashOrderRs.SrvCreateCashOrd
 import ru.philit.ufs.model.entity.esb.asfs.SrvUpdStCashOrderRq;
 import ru.philit.ufs.model.entity.esb.asfs.SrvUpdStCashOrderRs;
 import ru.philit.ufs.model.entity.esb.asfs.SrvUpdStCashOrderRs.SrvUpdCashOrderRsMessage;
-import ru.philit.ufs.model.entity.esb.asfs.HeaderInfoType;
-
 
 /**
  * Сервис на обработку запросов к АСФС.
