@@ -15,6 +15,7 @@ import ru.philit.ufs.model.entity.account.LegalEntity;
 import ru.philit.ufs.model.entity.account.Representative;
 import ru.philit.ufs.model.entity.account.RepresentativeRequest;
 import ru.philit.ufs.model.entity.account.Seizure;
+import ru.philit.ufs.model.entity.cash.CashOrder;
 import ru.philit.ufs.model.entity.common.ExternalEntity;
 import ru.philit.ufs.model.entity.common.ExternalEntityContainer;
 import ru.philit.ufs.model.entity.common.ExternalEntityList;
@@ -291,6 +292,15 @@ public class ResponseListener
           hazelcastServer.getCashSymbolsMap().put(
               new LocalKey<>(request.getSessionId(), (CashSymbolRequest) request.getRequestData()),
               ((ExternalEntityList<CashSymbol>) entity).getItems());
+        }
+        break;
+
+      case RequestType.CREATE_CASH_ORDER:
+      case RequestType.UPDATE_CASH_ORDER_STATUS:
+        if (entity instanceof CashOrder) {
+          hazelcastServer.getCashOrderMap().put(
+              new LocalKey<>(request.getSessionId(), (CashOrder) request.getRequestData()),
+              (CashOrder) entity);
         }
         break;
 

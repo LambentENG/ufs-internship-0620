@@ -4,6 +4,7 @@ import static ru.philit.ufs.model.cache.hazelcast.CollectionNames.ACCOUNT_20202_
 import static ru.philit.ufs.model.cache.hazelcast.CollectionNames.ACCOUNT_BY_CARD_NUMBER_MAP;
 import static ru.philit.ufs.model.cache.hazelcast.CollectionNames.ACCOUNT_RESIDUES_BY_ID_MAP;
 import static ru.philit.ufs.model.cache.hazelcast.CollectionNames.AUDITED_REQUESTS;
+import static ru.philit.ufs.model.cache.hazelcast.CollectionNames.CASH_ORDER_MAP;
 import static ru.philit.ufs.model.cache.hazelcast.CollectionNames.CASH_SYMBOLS_MAP;
 import static ru.philit.ufs.model.cache.hazelcast.CollectionNames.COMMISSION_BY_ACCOUNT_OPERATION_MAP;
 import static ru.philit.ufs.model.cache.hazelcast.CollectionNames.LEGAL_ENTITY_BY_ACCOUNT_MAP;
@@ -49,6 +50,7 @@ import ru.philit.ufs.model.entity.account.LegalEntity;
 import ru.philit.ufs.model.entity.account.Representative;
 import ru.philit.ufs.model.entity.account.RepresentativeRequest;
 import ru.philit.ufs.model.entity.account.Seizure;
+import ru.philit.ufs.model.entity.cash.CashOrder;
 import ru.philit.ufs.model.entity.common.ExternalEntityContainer;
 import ru.philit.ufs.model.entity.common.ExternalEntityRequest;
 import ru.philit.ufs.model.entity.common.LocalKey;
@@ -139,6 +141,9 @@ public class HazelcastBeClient {
   @Getter
   private IMap<LocalKey<String>, Operator> operatorByUserMap;
 
+  @Getter
+  private IMap<LocalKey<CashOrder>, CashOrder> cashOrderMap;
+
   @Autowired
   public HazelcastBeClient(
       HazelcastInstance hazelcastClient, HazelcastClientBeProperties properties
@@ -186,6 +191,8 @@ public class HazelcastBeClient {
     representativeByCardNumberMap = instance.getMap(REPRESENTATIVE_BY_CARD_MAP);
 
     operatorByUserMap = instance.getMap(OPERATOR_BY_USER_MAP);
+
+    cashOrderMap = instance.getMap(CASH_ORDER_MAP);
 
     logger.info("{} started", this.getClass().getSimpleName());
   }

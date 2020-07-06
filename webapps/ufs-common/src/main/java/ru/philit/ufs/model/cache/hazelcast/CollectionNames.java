@@ -47,6 +47,7 @@ public final class CollectionNames {
   public static final String REPRESENTATIVE_BY_CARD_MAP = "representativeByCardMap";
   public static final String OPERATOR_BY_USER_MAP = "operatorByUserMap";
   public static final String CASH_SYMBOLS_MAP = "cashSymbolsMap";
+  public static final String CASH_ORDER_MAP = "cashOrderMap";
 
   private CollectionNames() {
   }
