@@ -7,9 +7,11 @@ import ru.philit.ufs.model.entity.esb.asfs.CashOrderStatusType;
 import ru.philit.ufs.model.entity.esb.asfs.SrvCreateCashOrderRq;
 import ru.philit.ufs.model.entity.esb.asfs.SrvCreateCashOrderRq.SrvCreateCashOrderRqMessage;
 import ru.philit.ufs.model.entity.esb.asfs.SrvCreateCashOrderRs;
+import ru.philit.ufs.model.entity.esb.asfs.SrvCreateCashOrderRs.SrvCreateCashOrderRsMessage.KO1;
 import ru.philit.ufs.model.entity.esb.asfs.SrvUpdStCashOrderRq;
 import ru.philit.ufs.model.entity.esb.asfs.SrvUpdStCashOrderRq.SrvUpdCashOrderRqMessage;
 import ru.philit.ufs.model.entity.esb.asfs.SrvUpdStCashOrderRs;
+import ru.philit.ufs.model.entity.esb.asfs.SrvUpdStCashOrderRs.SrvUpdCashOrderRsMessage;
 
 public class CashOrderAdapter extends AsfsAdapter {
 
@@ -29,7 +31,7 @@ public class CashOrderAdapter extends AsfsAdapter {
 
   //******** Mappers *******
 
-  private static void map(SrvCreateCashOrderRs.SrvCreateCashOrderRsMessage.KO1 message,
+  private static void map(KO1 message,
       CashOrder cashOrder) {
     cashOrder.setResponseCode(message.getResponseCode());
     cashOrder.setResponseMsg(message.getResponseMsg());
@@ -55,14 +57,12 @@ public class CashOrderAdapter extends AsfsAdapter {
     map(message.getCashSymbols(), cashOrder);
   }
 
-  private static void map(
-      SrvCreateCashOrderRs.SrvCreateCashOrderRsMessage.KO1.CashSymbols cashSymbols,
+  private static void map(KO1.CashSymbols cashSymbols,
       CashOrder cashOrder) {
     cashOrder.getCashSymbol().setCode(cashSymbols.getCashSymbolItem().toString());
   }
 
-  protected static void map(
-      SrvCreateCashOrderRs.SrvCreateCashOrderRsMessage.KO1
+  protected static void map(KO1
           .CashSymbols.CashSymbolItem cashSymbolItem,
       CashOrder cashOrder) {
     cashOrder.getCashSymbol().setCode(cashSymbolItem.getCashSymbol());
@@ -70,8 +70,7 @@ public class CashOrderAdapter extends AsfsAdapter {
     cashOrder.getCashSymbol().setDescription(cashSymbolItem.getCashSymbol());
   }
 
-  private static void map(
-      SrvUpdStCashOrderRs.SrvUpdCashOrderRsMessage message,
+  private static void map(SrvUpdCashOrderRsMessage message,
       CashOrder cashOrder) {
     cashOrder.setResponseCode(message.getResponseCode());
     cashOrder.setResponseMsg(message.getResponseMsg());

@@ -31,6 +31,8 @@ public class RequestType {
   public static final String CASH_SYMBOL = "CASH_SYMBOL";
   public static final String CREATE_CASH_ORDER = "CREATE_CASH_ORDER";
   public static final String UPDATE_CASH_ORDER_STATUS = "UPDATE_CASH_ORDER_STATUS";
+  public static final String CHECK_OVER_LIMIT = "CHECK_OVER_LIMIT";
+  public static final String WORKPLACE_INFO = "WORKPLACE_INFO";
 
   private RequestType() {}
 
