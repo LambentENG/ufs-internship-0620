@@ -2,35 +2,34 @@ package ru.philit.ufs.model.converter.esb.asfs;
 
 import ru.philit.ufs.model.entity.cash.CheckOverLimit;
 import ru.philit.ufs.model.entity.cash.LimitStatus;
+import ru.philit.ufs.model.entity.common.ExternalEntityContainer;
 import ru.philit.ufs.model.entity.esb.asfs.LimitStatusType;
 import ru.philit.ufs.model.entity.esb.asfs.SrvCheckOverLimitRq;
 import ru.philit.ufs.model.entity.esb.asfs.SrvCheckOverLimitRq.SrvCheckOverLimitRqMessage;
 import ru.philit.ufs.model.entity.esb.asfs.SrvCheckOverLimitRs;
 import ru.philit.ufs.model.entity.esb.asfs.SrvCheckOverLimitRs.SrvCheckOverLimitRsMessage;
-import ru.philit.ufs.model.entity.esb.asfs.SrvGetWorkPlaceInfoRs;
-import ru.philit.ufs.model.entity.user.Workplace;
 
 public class CheckOverLimitAdapter extends AsfsAdapter {
 
   //******** Converters ********
 
-  private static LimitStatus limitStatus(LimitStatusType limitStatus) {
-    return (limitStatus != null) ? LimitStatus.fromValue(limitStatus.value()) : null;
+  private static Boolean limitStatus(LimitStatusType limitStatus) {
+    return limitStatus.name().equals(LimitStatus.LIMIT_PASSED.toString());
   }
 
   //******** Mappers *******
-
-  private static void map(SrvCheckOverLimitRsMessage message,
-      CheckOverLimit checkOverLimit) {
-    checkOverLimit.setResponseCode(message.getResponseCode());
-    checkOverLimit.setStatus(limitStatus(message.getStatus()));
-  }
 
   private static void map(CheckOverLimit checkOverLimit,
       SrvCheckOverLimitRqMessage message) {
     message.setUserLogin(checkOverLimit.getUserLogin());
     message.setTobeIncreased(checkOverLimit.isTobeIncreased());
     message.setAmount(checkOverLimit.getAmount());
+  }
+
+  private static void map(SrvCheckOverLimitRsMessage message,
+      ExternalEntityContainer<Boolean> container) {
+    container.setResponseCode(message.getResponseCode());
+    container.setData(limitStatus(message.getStatus()));
   }
 
   //******** Methods *******
@@ -49,11 +48,11 @@ public class CheckOverLimitAdapter extends AsfsAdapter {
   /**
    * Преобразует транспортный объект проверки лимита во внутреннюю сущность.
    */
-  public static CheckOverLimit convert(SrvCheckOverLimitRs response) {
-    CheckOverLimit checkOverLimit = new CheckOverLimit();
-    //map(response.getHeaderInfo(), checkOverLimit);
-    map(response.getSrvCheckOverLimitRsMessage(), checkOverLimit);
-    return checkOverLimit;
+  public static ExternalEntityContainer<Boolean> convert(SrvCheckOverLimitRs response) {
+    ExternalEntityContainer<Boolean> container = new ExternalEntityContainer<>();
+    map(response.getHeaderInfo(), container);
+    map(response.getSrvCheckOverLimitRsMessage(), container);
+    return container;
   }
 }
 

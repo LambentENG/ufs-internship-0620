@@ -4,19 +4,23 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlSchemaType;
+import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import ru.philit.ufs.model.entity.common.ExternalEntity;
 
 /**
  * Объект запроса проверки превышения лимита.
  */
-@EqualsAndHashCode
+@NoArgsConstructor
+@AllArgsConstructor
 @ToString
 @Getter
 @Setter
-public class CheckOverLimit implements Serializable {
+public class CheckOverLimit extends ExternalEntity {
 
   //SrvCheckOverLimitRqMessage
   private String userLogin;

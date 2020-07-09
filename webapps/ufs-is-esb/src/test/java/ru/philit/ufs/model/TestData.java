@@ -1,5 +1,6 @@
 package ru.philit.ufs.model;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Date;
 import lombok.Getter;
@@ -20,12 +21,19 @@ import ru.philit.ufs.model.entity.request.RequestType;
  */
 public class TestData {
 
+  public static final BigDecimal AMOUNT = BigDecimal.valueOf(66.66);
+  public static final BigInteger WORKPLACE_TYPE = BigInteger.valueOf(4444);
+  public static final BigDecimal WORKPLACE_LIMIT = BigDecimal.valueOf(44.44);
+
+  public static final String CASHBOX_ON_BOARD_DEVICE = "cashboxOnBoardDevice";
+  public static final String CASHBOX_DEVICE_TYPE = "cashboxDeviceType";
   public static final String SESSION_ID = "444";
   public static final String CARD_NUMBER = "4894123569871254";
   public static final String ACCOUNT_ID = "111111";
   public static final String LEGAL_ENTITY_ID = "112";
   public static final String AGREEMENT_ID = "45678";
   public static final String CASH_ORDER_ID = "1111";
+
 
   public static final String ACCOUNT_TYPE_ID = "01";
   public static final String ACCOUNT_STATUS = "status1";
@@ -36,6 +44,7 @@ public class TestData {
   public static final String RESPONSE_CODE = "ResponseCode";
   public static final String FDESTLENAME = "FDestLEName";
   public static final String OPERATOR_POSITION = "OperatorPosition";
+  public static final String USER_LOGIN = "userLogin";
   public static final String USER_FULL_NAME = "UserFullName";
   public static final String USER_POSITION = "UserPosition";
   public static final String OPERATION_ID = "7767";
@@ -59,6 +68,8 @@ public class TestData {
   public static final String CURRENCY_CODE = "642";
 
   public static final String ACCOUNT_REQUEST_FIX_UUID = "4f04ce04-ac37-4ec9-9923-6a9a5a882a97";
+  public static final String WORK_PLACE_UID = "1";
+
   public static final String ACCOUNT_REQUEST_TIME = "2017-05-12T17:57:00.000+03:00";
   public static final String ACCOUNT_REQUEST_XML = "<?xml version=\"1.0\" encoding=\"UTF-8\" "
       + "standalone=\"yes\"?><SrvAccountByCardNumRq><HeaderInfo><rqUID>" + ACCOUNT_REQUEST_FIX_UUID

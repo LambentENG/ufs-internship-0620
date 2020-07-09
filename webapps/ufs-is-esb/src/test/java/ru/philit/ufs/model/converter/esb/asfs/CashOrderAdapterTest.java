@@ -115,10 +115,11 @@ public class CashOrderAdapterTest extends AsfsAdapterBaseTest {
     Assert.assertEquals(cashOrder.getCashOrderINum(), TestData.CASH_ORDER_INUM);
     Assert.assertEquals(cashOrder.getAccountId(), TestData.ACCOUNT_ID);
     Assert.assertEquals(cashOrder.getCashOrderStatus(), TestData.CASH_ORDER_STATUS);
-    Assert.assertEquals(cashOrder.getAmount(), BigDecimal.valueOf(66.66));
+    Assert.assertEquals(cashOrder.getAmount(), TestData.AMOUNT);
     Assert.assertEquals(cashOrder.getResponseCode(), TestData.RESPONSE_CODE);
     Assert.assertEquals(cashOrder.getResponseMsg(), TestData.RESPONSE_MSG);
-    Assert.assertEquals(cashOrder.getCashOrderType(), cashOrder.getCashOrderType());
+    Assert.assertEquals(cashOrder.getCashOrderType(),
+        ru.philit.ufs.model.entity.cash.CashOrderType.KO_1);
     Assert.assertEquals(cashOrder.getOperationId(), TestData.OPERATION_ID);
     Assert.assertEquals(cashOrder.getRepFio(), TestData.REP_FIO);
     Assert.assertEquals(cashOrder.getLegalEntityShortName(), TestData.LEGAL_ENTITY_SHORT_NAME);
