@@ -10,9 +10,9 @@ import ru.philit.ufs.model.entity.esb.asfs.CashOrderStatusType;
 import ru.philit.ufs.model.entity.esb.asfs.CashOrderType;
 import ru.philit.ufs.model.entity.esb.asfs.OperTypeLabel;
 import ru.philit.ufs.model.entity.esb.asfs.SrvCreateCashOrderRq;
+import ru.philit.ufs.model.entity.esb.asfs.SrvCreateCashOrderRq.SrvCreateCashOrderRqMessage.AdditionalInfo.CashSymbols;
 import ru.philit.ufs.model.entity.esb.asfs.SrvCreateCashOrderRq.SrvCreateCashOrderRqMessage.RepData;
 import ru.philit.ufs.model.entity.esb.asfs.SrvCreateCashOrderRs;
-import ru.philit.ufs.model.entity.esb.asfs.SrvCreateCashOrderRs.SrvCreateCashOrderRsMessage.KO1.CashSymbols;
 import ru.philit.ufs.model.entity.esb.asfs.SrvUpdStCashOrderRq;
 import ru.philit.ufs.model.entity.esb.asfs.SrvUpdStCashOrderRs;
 
@@ -26,6 +26,11 @@ public interface CashOrderMapper {
   CashOrderType map(ru.philit.ufs.model.entity.cash.CashOrderType value);
 
   CashSymbols map(ru.philit.ufs.model.entity.oper.CashSymbol value);
+
+  // Can't generate mapping
+  // method from iterable type to non-iterable type
+  //
+  // CashSymbols map(java.util.List<ru.philit.ufs.model.entity.oper.CashSymbol> value); // :(
 
   OperTypeLabel map(ru.philit.ufs.model.entity.common.OperationTypeCode value);
 
@@ -76,8 +81,8 @@ public interface CashOrderMapper {
           target = "srvCreateCashOrderRsMessage.KO1.userFullName"),
       @Mapping(source = "userPosition",
           target = "srvCreateCashOrderRsMessage.KO1.userPosition"),
-      @Mapping(source = "cashSymbol",
-          target = "srvCreateCashOrderRsMessage.KO1.cashSymbols"),
+          //  @Mapping(source = "cashSymbols",
+          //  target = "srvCreateCashOrderRsMessage.KO1.cashSymbols"),
   })
   SrvCreateCashOrderRs createCashOrderRs(CashOrder cashOrder);
 
@@ -131,7 +136,9 @@ public interface CashOrderMapper {
       @Mapping(source = "subbranch.gosbCode",
           target = "srvCreateCashOrderRqMessage.additionalInfo.GOSBCode"),
       @Mapping(source = "subbranch.tbCode",
-          target = "srvCreateCashOrderRqMessage.additionalInfo.TBCode")
+          target = "srvCreateCashOrderRqMessage.additionalInfo.TBCode"),
+          //  @Mapping(source = "cashSymbols",
+          //  target = "srvCreateCashOrderRqMessage.additionalInfo.cashSymbols")
   })
   SrvCreateCashOrderRq createCashOrderRq(CashOrder cashOrder);
 

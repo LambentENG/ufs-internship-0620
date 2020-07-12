@@ -1,7 +1,9 @@
 package ru.philit.ufs.model.entity.cash;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -52,7 +54,7 @@ public class CashOrder extends ExternalEntity {
   private String operatorPosition;
   private String userFullName;
   private String userPosition;
-  private CashSymbol cashSymbol;
+  private List<CashSymbol> cashSymbols;
 
   //AdditionalInfo
   private String comment;
@@ -64,7 +66,8 @@ public class CashOrder extends ExternalEntity {
    * Конструктор Кассового ордера.
    */
   public CashOrder() {
+    this.repData = new Representative();
     this.subbranch = new Subbranch();
-    this.cashSymbol = new CashSymbol();
+    this.cashSymbols = new ArrayList<>();
   }
 }

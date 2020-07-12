@@ -132,7 +132,7 @@ public class CashOrderAdapterTest extends AsfsAdapterBaseTest {
     Assert.assertEquals(cashOrder.getOperatorPosition(), TestData.OPERATOR_POSITION);
     Assert.assertEquals(cashOrder.getUserFullName(), TestData.USER_FULL_NAME);
     Assert.assertEquals(cashOrder.getUserPosition(), TestData.USER_POSITION);
-    Assert.assertEquals(cashOrder.getCashSymbol(), cashOrder.getCashSymbol());
+    Assert.assertEquals(cashOrder.getCashSymbols(), cashOrder.getCashSymbols());
   }
 
   private void testUpdateState(CashOrder cashOrder) {
