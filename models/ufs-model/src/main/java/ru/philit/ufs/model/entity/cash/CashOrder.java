@@ -6,7 +6,9 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import ru.philit.ufs.model.entity.account.Representative;
 import ru.philit.ufs.model.entity.common.ExternalEntity;
+import ru.philit.ufs.model.entity.common.OperationTypeCode;
 import ru.philit.ufs.model.entity.oper.CashSymbol;
 import ru.philit.ufs.model.entity.user.Subbranch;
 
@@ -26,6 +28,8 @@ public class CashOrder extends ExternalEntity {
 
   //SrvCreateCashOrderRqMessage
   //SrvUpdCashOrderRqMessage
+  private OperationTypeCode operationType;
+  private Representative repData;
   private String amountInWords;
   private String currencyType;
   private String workPlaceUId;
