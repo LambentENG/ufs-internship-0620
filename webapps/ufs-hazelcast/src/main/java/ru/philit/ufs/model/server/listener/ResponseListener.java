@@ -16,6 +16,7 @@ import ru.philit.ufs.model.entity.account.Representative;
 import ru.philit.ufs.model.entity.account.RepresentativeRequest;
 import ru.philit.ufs.model.entity.account.Seizure;
 import ru.philit.ufs.model.entity.cash.CashOrder;
+import ru.philit.ufs.model.entity.cash.CheckOverLimit;
 import ru.philit.ufs.model.entity.common.ExternalEntity;
 import ru.philit.ufs.model.entity.common.ExternalEntityContainer;
 import ru.philit.ufs.model.entity.common.ExternalEntityList;
@@ -34,6 +35,7 @@ import ru.philit.ufs.model.entity.oper.PaymentOrderCardIndex1;
 import ru.philit.ufs.model.entity.oper.PaymentOrderCardIndex2;
 import ru.philit.ufs.model.entity.request.RequestType;
 import ru.philit.ufs.model.entity.user.Operator;
+import ru.philit.ufs.model.entity.user.Workplace;
 import ru.philit.ufs.model.server.HazelcastServer;
 
 /**
@@ -301,6 +303,22 @@ public class ResponseListener
           hazelcastServer.getCashOrderMap().put(
               new LocalKey<>(request.getSessionId(), (CashOrder) request.getRequestData()),
               (CashOrder) entity);
+        }
+        break;
+
+      case RequestType.CHECK_OVER_LIMIT:
+        if (entity instanceof CheckOverLimit) {
+          hazelcastServer.getCheckOverLimitMap().put(
+              new LocalKey<>(request.getSessionId(), (CheckOverLimit) request.getRequestData()),
+              (CheckOverLimit) entity);
+        }
+        break;
+
+      case RequestType.WORKPLACE_INFO:
+        if (entity instanceof Workplace) {
+          hazelcastServer.getWorkplaceMap().put(
+              new LocalKey<>(request.getSessionId(), (Workplace) request.getRequestData()),
+              (Workplace) entity);
         }
         break;
 

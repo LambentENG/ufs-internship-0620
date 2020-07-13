@@ -1,6 +1,7 @@
 package ru.philit.ufs.esb.mock.service;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import javax.annotation.PostConstruct;
 import javax.xml.bind.JAXBException;
 import org.slf4j.Logger;
@@ -14,11 +15,20 @@ import ru.philit.ufs.model.converter.esb.JaxbConverter;
 import ru.philit.ufs.model.entity.esb.asfs.CashOrderStatusType;
 import ru.philit.ufs.model.entity.esb.asfs.CashOrderType;
 import ru.philit.ufs.model.entity.esb.asfs.HeaderInfoType;
+import ru.philit.ufs.model.entity.esb.asfs.LimitStatusType;
+import ru.philit.ufs.model.entity.esb.asfs.SrvCheckOverLimitRq;
+import ru.philit.ufs.model.entity.esb.asfs.SrvCheckOverLimitRs;
+import ru.philit.ufs.model.entity.esb.asfs.SrvCheckOverLimitRs.SrvCheckOverLimitRsMessage;
 import ru.philit.ufs.model.entity.esb.asfs.SrvCreateCashOrderRq;
 import ru.philit.ufs.model.entity.esb.asfs.SrvCreateCashOrderRs;
 import ru.philit.ufs.model.entity.esb.asfs.SrvCreateCashOrderRs.SrvCreateCashOrderRsMessage;
 import ru.philit.ufs.model.entity.esb.asfs.SrvCreateCashOrderRs.SrvCreateCashOrderRsMessage.KO1;
 import ru.philit.ufs.model.entity.esb.asfs.SrvCreateCashOrderRs.SrvCreateCashOrderRsMessage.KO1.CashSymbols;
+import ru.philit.ufs.model.entity.esb.asfs.SrvGetWorkPlaceInfoRq;
+import ru.philit.ufs.model.entity.esb.asfs.SrvGetWorkPlaceInfoRs;
+import ru.philit.ufs.model.entity.esb.asfs.SrvGetWorkPlaceInfoRs.SrvGetWorkPlaceInfoRsMessage;
+import ru.philit.ufs.model.entity.esb.asfs.SrvGetWorkPlaceInfoRs.SrvGetWorkPlaceInfoRsMessage.WorkPlaceOperationTypeLimit;
+import ru.philit.ufs.model.entity.esb.asfs.SrvGetWorkPlaceInfoRs.SrvGetWorkPlaceInfoRsMessage.WorkPlaceOperationTypeLimit.OperationTypeLimitItem;
 import ru.philit.ufs.model.entity.esb.asfs.SrvUpdStCashOrderRq;
 import ru.philit.ufs.model.entity.esb.asfs.SrvUpdStCashOrderRs;
 import ru.philit.ufs.model.entity.esb.asfs.SrvUpdStCashOrderRs.SrvUpdCashOrderRsMessage;
@@ -60,7 +70,12 @@ public class AsfsMockService extends CommonMockService implements MessageProcess
           sendResponse(getResponse((SrvCreateCashOrderRq) request));
         } else if (request instanceof SrvUpdStCashOrderRq) {
           sendResponse(getResponse((SrvUpdStCashOrderRq) request));
+        } else if (request instanceof SrvCheckOverLimitRq) {
+          sendResponse(getResponse((SrvCheckOverLimitRq) request));
+        } else if (request instanceof SrvGetWorkPlaceInfoRq) {
+          sendResponse(getResponse((SrvGetWorkPlaceInfoRq) request));
         }
+
         return true;
       }
     } catch (JAXBException e) {
@@ -84,7 +99,7 @@ public class AsfsMockService extends CommonMockService implements MessageProcess
     ko1.setResponseCode("ResponseCode");
     ko1.setResponseMsg("ResponseMsg");
     ko1.setCashOrderId("CashOrderId");
-    ko1.setCashOrderINum("ashOrderINum");
+    ko1.setCashOrderINum("CashOrderINum");
     ko1.setCashOrderStatus(CashOrderStatusType.CREATED);
     ko1.setCashOrderType(CashOrderType.KO_1);
     ko1.setCreatedDttm(xmlCalendar(2020, 7, 7, 07, 7));
@@ -118,6 +133,39 @@ public class AsfsMockService extends CommonMockService implements MessageProcess
     response.getSrvUpdCashOrderRsMessage().setCashOrderINum("cashOrderINum");
     response.getSrvUpdCashOrderRsMessage().setCashOrderStatus(CashOrderStatusType.CREATED);
     response.getSrvUpdCashOrderRsMessage().setCashOrderType(CashOrderType.KO_1);
+    return response;
+  }
+
+  private SrvCheckOverLimitRs getResponse(SrvCheckOverLimitRq request) {
+    SrvCheckOverLimitRs response = new SrvCheckOverLimitRs();
+    response.setHeaderInfo(copyHeaderInfo(request.getHeaderInfo()));
+    response.setSrvCheckOverLimitRsMessage(new SrvCheckOverLimitRsMessage());
+
+    response.getSrvCheckOverLimitRsMessage().setResponseCode("ResponseCode");
+    response.getSrvCheckOverLimitRsMessage().setStatus(LimitStatusType.LIMIT_PASSED);
+    return response;
+  }
+
+  private SrvGetWorkPlaceInfoRs getResponse(SrvGetWorkPlaceInfoRq request) {
+    SrvGetWorkPlaceInfoRs response = new SrvGetWorkPlaceInfoRs();
+    response.setHeaderInfo(copyHeaderInfo(request.getHeaderInfo()));
+    response.setSrvGetWorkPlaceInfoRsMessage(new SrvGetWorkPlaceInfoRsMessage());
+
+    response.getSrvGetWorkPlaceInfoRsMessage().setWorkPlaceType(BigInteger.valueOf(4444));
+    response.getSrvGetWorkPlaceInfoRsMessage().setCashboxOnBoard(true);
+    response.getSrvGetWorkPlaceInfoRsMessage().setSubbranchCode("SubbranchCode");
+    response.getSrvGetWorkPlaceInfoRsMessage().setCashboxOnBoardDevice("CashboxOnBoardDevice");
+    response.getSrvGetWorkPlaceInfoRsMessage().setCashboxDeviceType("CashboxDeviceType");
+    response.getSrvGetWorkPlaceInfoRsMessage().setCurrentCurrencyType("CurrentCurrencyType");
+    response.getSrvGetWorkPlaceInfoRsMessage().setAmount(BigDecimal.valueOf(44.44));
+    response.getSrvGetWorkPlaceInfoRsMessage().setWorkPlaceLimit(BigDecimal.valueOf(44444.4));
+    response.getSrvGetWorkPlaceInfoRsMessage().setWorkPlaceOperationTypeLimit(
+        new WorkPlaceOperationTypeLimit());
+    OperationTypeLimitItem operationTypeLimitItem = new OperationTypeLimitItem();
+    operationTypeLimitItem.setOperationCategory(BigInteger.valueOf(4444));
+    operationTypeLimitItem.setOperationLimit(BigDecimal.valueOf(44.44));
+    response.getSrvGetWorkPlaceInfoRsMessage().getWorkPlaceOperationTypeLimit()
+        .getOperationTypeLimitItem().add(operationTypeLimitItem);
     return response;
   }
 

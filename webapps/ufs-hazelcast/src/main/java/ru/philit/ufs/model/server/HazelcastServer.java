@@ -9,6 +9,7 @@ import static ru.philit.ufs.model.cache.hazelcast.CollectionNames.AUDITED_REQUES
 import static ru.philit.ufs.model.cache.hazelcast.CollectionNames.CASH_ORDER_MAP;
 import static ru.philit.ufs.model.cache.hazelcast.CollectionNames.CASH_SYMBOLS_MAP;
 import static ru.philit.ufs.model.cache.hazelcast.CollectionNames.CHECK_FRAUD_BY_ACCOUNT_OPERATION_MAP;
+import static ru.philit.ufs.model.cache.hazelcast.CollectionNames.CHECK_OVER_LIMIT_MAP;
 import static ru.philit.ufs.model.cache.hazelcast.CollectionNames.COMMISSION_BY_ACCOUNT_OPERATION_MAP;
 import static ru.philit.ufs.model.cache.hazelcast.CollectionNames.LEGAL_ENTITY_BY_ACCOUNT_MAP;
 import static ru.philit.ufs.model.cache.hazelcast.CollectionNames.LOGGED_EVENTS;
@@ -32,6 +33,7 @@ import static ru.philit.ufs.model.cache.hazelcast.CollectionNames.RESPONSE_FLAG_
 import static ru.philit.ufs.model.cache.hazelcast.CollectionNames.RESPONSE_QUEUE;
 import static ru.philit.ufs.model.cache.hazelcast.CollectionNames.SEIZURES_BY_ACCOUNT_MAP;
 import static ru.philit.ufs.model.cache.hazelcast.CollectionNames.USER_BY_SESSION_MAP;
+import static ru.philit.ufs.model.cache.hazelcast.CollectionNames.WORKPLACE_INFO_MAP;
 
 import com.hazelcast.config.Config;
 import com.hazelcast.config.MapConfig;
@@ -60,6 +62,7 @@ import ru.philit.ufs.model.entity.account.Representative;
 import ru.philit.ufs.model.entity.account.RepresentativeRequest;
 import ru.philit.ufs.model.entity.account.Seizure;
 import ru.philit.ufs.model.entity.cash.CashOrder;
+import ru.philit.ufs.model.entity.cash.CheckOverLimit;
 import ru.philit.ufs.model.entity.common.ExternalEntity;
 import ru.philit.ufs.model.entity.common.ExternalEntityContainer;
 import ru.philit.ufs.model.entity.common.ExternalEntityRequest;
@@ -80,6 +83,7 @@ import ru.philit.ufs.model.entity.service.AuditEntity;
 import ru.philit.ufs.model.entity.service.LogEntity;
 import ru.philit.ufs.model.entity.user.Operator;
 import ru.philit.ufs.model.entity.user.User;
+import ru.philit.ufs.model.entity.user.Workplace;
 
 /**
  * Контейнер коллекций распределённого кеша.
@@ -177,6 +181,10 @@ public class HazelcastServer {
 
   @Getter private IMap<LocalKey<CashOrder>, CashOrder> cashOrderMap;
 
+  @Getter private IMap<LocalKey<CheckOverLimit>, CheckOverLimit> checkOverLimitMap;
+
+  @Getter private IMap<LocalKey<Workplace>, Workplace> workplaceMap;
+
   /**
    * Конструктор бина.
    */
@@ -246,7 +254,7 @@ public class HazelcastServer {
         COMMISSION_BY_ACCOUNT_OPERATION_MAP, CHECK_FRAUD_BY_ACCOUNT_OPERATION_MAP,
         OVN_BY_UID_MAP, OVNS_MAP, ACCOUNT_20202_BY_WORK_PLACE_MAP, OPERATION_TYPES_BY_ROLES_MAP,
         REPRESENTATIVE_MAP, REPRESENTATIVE_BY_CARD_MAP, OPERATOR_BY_USER_MAP, CASH_SYMBOLS_MAP,
-        CASH_ORDER_MAP}) {
+        CASH_ORDER_MAP, CHECK_OVER_LIMIT_MAP, WORKPLACE_INFO_MAP}) {
       MapConfig mapConfig = new MapConfig();
       mapConfig.setName(mapName);
       mapConfig.setTimeToLiveSeconds(3600);
@@ -295,6 +303,8 @@ public class HazelcastServer {
     cashSymbolsMap = instance.getMap(CASH_SYMBOLS_MAP);
 
     cashOrderMap = instance.getMap(CASH_ORDER_MAP);
+    checkOverLimitMap = instance.getMap(CHECK_OVER_LIMIT_MAP);
+    workplaceMap = instance.getMap(WORKPLACE_INFO_MAP);
 
     logger.info("Hazelcast server for {} is started", instance.getName());
   }
