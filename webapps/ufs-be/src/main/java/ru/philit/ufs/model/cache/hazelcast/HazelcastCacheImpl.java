@@ -8,7 +8,9 @@ import static ru.philit.ufs.model.entity.request.RequestType.ADD_OPER_TASK;
 import static ru.philit.ufs.model.entity.request.RequestType.CARD_INDEX_ELEMENTS_BY_ACCOUNT;
 import static ru.philit.ufs.model.entity.request.RequestType.CASH_SYMBOL;
 import static ru.philit.ufs.model.entity.request.RequestType.CHECK_OPER_PACKAGE;
+import static ru.philit.ufs.model.entity.request.RequestType.CHECK_OVER_LIMIT;
 import static ru.philit.ufs.model.entity.request.RequestType.COUNT_COMMISSION;
+import static ru.philit.ufs.model.entity.request.RequestType.CREATE_CASH_ORDER;
 import static ru.philit.ufs.model.entity.request.RequestType.CREATE_OPER_PACKAGE;
 import static ru.philit.ufs.model.entity.request.RequestType.GET_OPER_TASKS;
 import static ru.philit.ufs.model.entity.request.RequestType.GET_OVN;
@@ -19,7 +21,9 @@ import static ru.philit.ufs.model.entity.request.RequestType.OPERATOR_BY_USER;
 import static ru.philit.ufs.model.entity.request.RequestType.OPER_TYPES_BY_ROLE;
 import static ru.philit.ufs.model.entity.request.RequestType.SEARCH_REPRESENTATIVE;
 import static ru.philit.ufs.model.entity.request.RequestType.SEIZURES_BY_ACCOUNT;
+import static ru.philit.ufs.model.entity.request.RequestType.UPDATE_CASH_ORDER_STATUS;
 import static ru.philit.ufs.model.entity.request.RequestType.UPDATE_OPER_TASK;
+import static ru.philit.ufs.model.entity.request.RequestType.WORKPLACE_INFO;
 
 import com.google.common.collect.Iterables;
 import com.hazelcast.core.IMap;
@@ -41,6 +45,8 @@ import ru.philit.ufs.model.entity.account.LegalEntity;
 import ru.philit.ufs.model.entity.account.Representative;
 import ru.philit.ufs.model.entity.account.RepresentativeRequest;
 import ru.philit.ufs.model.entity.account.Seizure;
+import ru.philit.ufs.model.entity.cash.CashOrder;
+import ru.philit.ufs.model.entity.cash.CheckOverLimit;
 import ru.philit.ufs.model.entity.common.ExternalEntityContainer;
 import ru.philit.ufs.model.entity.common.LocalKey;
 import ru.philit.ufs.model.entity.oper.CashDepositAnnouncement;
@@ -58,6 +64,7 @@ import ru.philit.ufs.model.entity.oper.PaymentOrderCardIndex2;
 import ru.philit.ufs.model.entity.user.ClientInfo;
 import ru.philit.ufs.model.entity.user.Operator;
 import ru.philit.ufs.model.entity.user.User;
+import ru.philit.ufs.model.entity.user.Workplace;
 import ru.philit.ufs.service.AuditService;
 import ru.philit.ufs.web.exception.UserNotFoundException;
 
@@ -179,6 +186,14 @@ public class HazelcastCacheImpl
   }
 
   @Override
+  public Boolean checkOverLimit(CheckOverLimit request, ClientInfo clientInfo) {
+    ExternalEntityContainer<Boolean> container = requestData(
+        request, client.getCheckOverLimitMap(), CHECK_OVER_LIMIT, clientInfo
+    );
+    return container.getData();
+  }
+
+  @Override
   public Operation getOperation(Long taskId) {
     return client.getOperationByTaskMap().get(taskId);
   }
@@ -245,6 +260,15 @@ public class HazelcastCacheImpl
   }
 
   @Override
+  public Workplace getWorkplace(String workplaceId, ClientInfo clientInfo) {
+    return requestData(
+      workplaceId, client.getWorkplaceMap(), WORKPLACE_INFO, clientInfo
+    );
+
+  }
+
+
+  @Override
   public void addUser(String sessionId, User user) {
     client.getUserBySessionMap().put(sessionId, user);
   }
@@ -305,5 +329,19 @@ public class HazelcastCacheImpl
 
   private <T> T getFirst(List<T> list) {
     return (list != null) ? Iterables.getFirst(list, null) : null;
+  }
+
+  @Override
+  public CashOrder createCashOrder(CashOrder cashOrder, ClientInfo clientInfo) {
+    return requestData(
+      cashOrder, client.getCashOrderMap(), CREATE_CASH_ORDER, clientInfo
+    );
+  }
+
+  @Override
+  public CashOrder updateStatusCashOrder(CashOrder cashOrder, ClientInfo clientInfo) {
+    return requestData(
+      cashOrder, client.getCashOrderMap(), UPDATE_CASH_ORDER_STATUS, clientInfo
+    );
   }
 }

@@ -149,10 +149,10 @@ public class HazelcastBeClient {
   private IMap<LocalKey<CashOrder>, CashOrder> cashOrderMap;
 
   @Getter
-  private IMap<LocalKey<CheckOverLimit>, CheckOverLimit> checkOverLimitMap;
+  private IMap<LocalKey<CheckOverLimit>, ExternalEntityContainer<Boolean>> checkOverLimitMap;
 
   @Getter
-  private IMap<LocalKey<Workplace>, Workplace> workplaceMap;
+  private IMap<LocalKey<String>, Workplace> workplaceMap;
 
   @Autowired
   public HazelcastBeClient(

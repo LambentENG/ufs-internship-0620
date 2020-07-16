@@ -6,7 +6,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 import ru.philit.ufs.model.cache.MockCache;
+import ru.philit.ufs.model.cache.OperationCache;
 import ru.philit.ufs.model.cache.UserCache;
+import ru.philit.ufs.model.entity.cash.CheckOverLimit;
 import ru.philit.ufs.model.entity.user.ClientInfo;
 import ru.philit.ufs.model.entity.user.Operator;
 import ru.philit.ufs.model.entity.user.SessionUser;
@@ -22,11 +24,16 @@ import ru.philit.ufs.web.exception.InvalidDataException;
 @Service
 public class UserProvider {
 
+  private final OperationCache operCache;
   private final UserCache cache;
   private final MockCache mockCache;
 
+  /**
+   * Конструктор UserProvider.
+   */
   @Autowired
-  public UserProvider(UserCache cache, MockCache mockCache) {
+  public UserProvider(OperationCache operCache, UserCache cache, MockCache mockCache) {
+    this.operCache = operCache;
     this.cache = cache;
     this.mockCache = mockCache;
   }
@@ -98,7 +105,7 @@ public class UserProvider {
    */
   public Workplace getWorkplace(ClientInfo clientInfo) {
     Operator operator = getOperator(clientInfo);
-    Workplace workplace = mockCache.getWorkplace(operator.getWorkplaceId());
+    Workplace workplace = cache.getWorkplace(operator.getWorkplaceId(), clientInfo);
     if (workplace == null) {
       throw new InvalidDataException("Запрашиваемое рабочее место не найдено в системе");
     }
@@ -112,7 +119,8 @@ public class UserProvider {
     if (workplace.getAmount() == null) {
       throw new InvalidDataException("Отсутствует общий остаток по кассе");
     }
-    if (!mockCache.checkOverLimit(workplace.getAmount())) {
+    CheckOverLimit checkOverLimit = new CheckOverLimit();
+    if (!operCache.checkOverLimit(checkOverLimit, clientInfo)) {
       throw new InvalidDataException("Превышен лимит общего остатка по кассе");
     }
     return workplace;
@@ -126,14 +134,15 @@ public class UserProvider {
    */
   public void checkWorkplaceIncreasedAmount(BigDecimal amount, ClientInfo clientInfo) {
     Operator operator = getOperator(clientInfo);
-    Workplace workplace = mockCache.getWorkplace(operator.getWorkplaceId());
+    Workplace workplace = cache.getWorkplace(operator.getWorkplaceId(), clientInfo);
     if (workplace == null) {
       throw new InvalidDataException("Запрашиваемое рабочее место не найдено в системе");
     }
     if (workplace.getAmount() == null) {
       throw new InvalidDataException("Отсутствует общий остаток по кассе");
     }
-    if (!mockCache.checkOverLimit(amount.add(workplace.getAmount()))) {
+    CheckOverLimit checkOverLimit = new CheckOverLimit();
+    if (!operCache.checkOverLimit(checkOverLimit, clientInfo)) {
       throw new InvalidDataException("Превышен лимит общего остатка по кассе");
     }
   }

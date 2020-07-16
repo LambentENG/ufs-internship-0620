@@ -26,8 +26,6 @@ public class MockCacheImpl implements MockCache {
   private static final String LOGIN_SIDOROV = "Sidorov_SS";
   private static final String LOGIN_SVETLOVA = "Svetlova_SS";
 
-  private static final BigDecimal MAX_LIMIT = new BigDecimal("5000000.0");
-
   @Override
   public User getUser(String userLogin, String password) {
     if (StringUtils.isEmpty(userLogin)) {
@@ -86,6 +84,8 @@ public class MockCacheImpl implements MockCache {
     return card;
   }
 
+  /* let's it stay here for a while
+
   @Override
   public Workplace getWorkplace(String workplaceId) {
     Workplace workplace = new Workplace();
@@ -117,6 +117,7 @@ public class MockCacheImpl implements MockCache {
   public boolean checkOverLimit(BigDecimal amount) {
     return amount.compareTo(MAX_LIMIT) <= 0;
   }
+  */
 
   @Override
   public Operation createOperation(String workplaceId, String operationTypeCode) {
