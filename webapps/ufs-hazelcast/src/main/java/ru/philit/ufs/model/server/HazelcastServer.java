@@ -181,9 +181,10 @@ public class HazelcastServer {
 
   @Getter private IMap<LocalKey<CashOrder>, CashOrder> cashOrderMap;
 
-  @Getter private IMap<LocalKey<CheckOverLimit>, CheckOverLimit> checkOverLimitMap;
+  @Getter private IMap<LocalKey<CheckOverLimit>, ExternalEntityContainer<Boolean>>
+      checkOverLimitMap;
 
-  @Getter private IMap<LocalKey<Workplace>, Workplace> workplaceMap;
+  @Getter private IMap<LocalKey<String>, Workplace> workplaceMap;
 
   /**
    * Конструктор бина.

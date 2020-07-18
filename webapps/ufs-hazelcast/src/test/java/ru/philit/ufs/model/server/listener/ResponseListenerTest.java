@@ -21,6 +21,8 @@ import ru.philit.ufs.model.entity.account.LegalEntity;
 import ru.philit.ufs.model.entity.account.Representative;
 import ru.philit.ufs.model.entity.account.RepresentativeRequest;
 import ru.philit.ufs.model.entity.account.Seizure;
+import ru.philit.ufs.model.entity.cash.CashOrder;
+import ru.philit.ufs.model.entity.cash.CheckOverLimit;
 import ru.philit.ufs.model.entity.common.ExternalEntity;
 import ru.philit.ufs.model.entity.common.ExternalEntityContainer;
 import ru.philit.ufs.model.entity.common.ExternalEntityList;
@@ -41,6 +43,7 @@ import ru.philit.ufs.model.entity.oper.PaymentOrderCardIndex1;
 import ru.philit.ufs.model.entity.oper.PaymentOrderCardIndex2;
 import ru.philit.ufs.model.entity.request.RequestType;
 import ru.philit.ufs.model.entity.user.Operator;
+import ru.philit.ufs.model.entity.user.Workplace;
 import ru.philit.ufs.model.server.HazelcastServer;
 import ru.philit.ufs.model.server.MockIMap;
 import ru.philit.ufs.model.server.MockIQueue;
@@ -53,6 +56,7 @@ public class ResponseListenerTest {
   private static final String LEGAL_ENTITY_ID = "112";
   private static final String FIX_UUID = "4f04ce04-ac37-4ec9-9923-6a9a5a882a97";
   private static final String OVN_UID = "121212";
+  private static final String WORKPLACE_ID = "444";
 
   private final IQueue<ExternalEntity> responseQueue = new MockIQueue<>(5);
   private final IMap<String, ExternalEntityRequest> requestMap = new MockIMap<>();
@@ -103,6 +107,18 @@ public class ResponseListenerTest {
   private final IMap<LocalKey<CashSymbolRequest>, List<CashSymbol>> cashSymbolsMap =
       new MockIMap<>();
 
+  private final IMap<LocalKey<CashOrder>, CashOrder> cashOrderMap = new MockIMap<>();
+
+  private final IMap<LocalKey<CheckOverLimit>, ExternalEntityContainer<Boolean>> checkOverLimitMap =
+      new MockIMap<>();
+
+  private final IMap<LocalKey<String>, Workplace> workplaceMap = new MockIMap<>();
+
+
+
+
+
+
   @Mock
   private HazelcastServer hazelcastServer;
 
@@ -146,6 +162,9 @@ public class ResponseListenerTest {
     when(hazelcastServer.getRepresentativeByCardMap()).thenReturn(representativeByCardMap);
     when(hazelcastServer.getOperatorByUserMap()).thenReturn(operatorByUserMap);
     when(hazelcastServer.getCashSymbolsMap()).thenReturn(cashSymbolsMap);
+    when(hazelcastServer.getCashOrderMap()).thenReturn(cashOrderMap);
+    when(hazelcastServer.getCheckOverLimitMap()).thenReturn(checkOverLimitMap);
+    when(hazelcastServer.getWorkplaceMap()).thenReturn(workplaceMap);
     responseListener.init();
   }
 
@@ -1209,6 +1228,172 @@ public class ResponseListenerTest {
     Assert.assertTrue(responseFlagMap.containsKey(request));
     LocalKey<CashSymbolRequest> localKey = new LocalKey<>(SESSION_ID, cashSymbolRequest);
     Assert.assertFalse(cashSymbolsMap.containsKey(localKey));
+  }
+
+  @Test
+  public void testItemAdded_CreateCashOrder() throws Exception {
+    //given
+    ExternalEntityRequest request = new ExternalEntityRequest();
+    request.setSessionId(SESSION_ID);
+    request.setEntityType(RequestType.CREATE_CASH_ORDER);
+    CashOrder createCashOrderRequest = new CashOrder();
+    request.setRequestData(createCashOrderRequest);
+    CashOrder cashOrder = new CashOrder();
+    cashOrder.setRequestUid(FIX_UUID);
+    cashOrder.setReceiveDate(new Date());
+    cashOrder.setCashOrderId("cashOrderId");
+    //when
+    requestMap.put(FIX_UUID, request);
+    responseQueue.add(cashOrder);
+    //then
+    Assert.assertTrue(responseFlagMap.containsKey(request));
+    LocalKey<CashOrder> localKey = new LocalKey<>(SESSION_ID, createCashOrderRequest);
+    Assert.assertTrue(cashOrderMap.containsKey(localKey));
+    Assert.assertEquals(cashOrderMap.get(localKey), cashOrder);
+  }
+
+  @Test
+  public void testItemAdded_CreateCashOrder_Bad() throws Exception {
+    //given
+    ExternalEntityRequest request = new ExternalEntityRequest();
+    request.setSessionId(SESSION_ID);
+    request.setEntityType(RequestType.CREATE_CASH_ORDER);
+    CashOrder createCashOrderRequest = new CashOrder();
+    request.setRequestData(createCashOrderRequest);
+    ExternalEntity cashOrder = new ExternalEntity();
+    cashOrder.setRequestUid(FIX_UUID);
+    cashOrder.setReceiveDate(new Date());
+    //when
+    requestMap.put(FIX_UUID, request);
+    responseQueue.add(cashOrder);
+    //then
+    Assert.assertTrue(responseFlagMap.containsKey(request));
+    LocalKey<CashOrder> localKey = new LocalKey<>(SESSION_ID, createCashOrderRequest);
+    Assert.assertFalse(cashOrderMap.containsKey(localKey));
+  }
+
+  @Test
+  public void testItemAdded_UpdateCashOrder() throws Exception {
+    //given
+    ExternalEntityRequest request = new ExternalEntityRequest();
+    request.setSessionId(SESSION_ID);
+    request.setEntityType(RequestType.UPDATE_CASH_ORDER_STATUS);
+    CashOrder updateCashOrderRequest = new CashOrder();
+    request.setRequestData(updateCashOrderRequest);
+    CashOrder cashOrder = new CashOrder();
+    cashOrder.setRequestUid(FIX_UUID);
+    cashOrder.setReceiveDate(new Date());
+    cashOrder.setCashOrderId("cashOrderId");
+    //when
+    requestMap.put(FIX_UUID, request);
+    responseQueue.add(cashOrder);
+    //then
+    Assert.assertTrue(responseFlagMap.containsKey(request));
+    LocalKey<CashOrder> localKey = new LocalKey<>(SESSION_ID, updateCashOrderRequest);
+    Assert.assertTrue(cashOrderMap.containsKey(localKey));
+    Assert.assertEquals(cashOrderMap.get(localKey), cashOrder);
+  }
+
+  @Test
+  public void testItemAdded_UpdateCashOrder_Bad() throws Exception {
+    //given
+    ExternalEntityRequest request = new ExternalEntityRequest();
+    request.setSessionId(SESSION_ID);
+    request.setEntityType(RequestType.UPDATE_CASH_ORDER_STATUS);
+    CashOrder updateCashOrderRequest = new CashOrder();
+    request.setRequestData(updateCashOrderRequest);
+    ExternalEntity cashOrder = new ExternalEntity();
+    cashOrder.setRequestUid(FIX_UUID);
+    cashOrder.setReceiveDate(new Date());
+    //when
+    requestMap.put(FIX_UUID, request);
+    responseQueue.add(cashOrder);
+    //then
+    Assert.assertTrue(responseFlagMap.containsKey(request));
+    LocalKey<CashOrder> localKey = new LocalKey<>(SESSION_ID, updateCashOrderRequest);
+    Assert.assertFalse(cashOrderMap.containsKey(localKey));
+  }
+
+  @Test
+  public void testItemAdded_CheckOverLimit() throws Exception {
+    //given
+    ExternalEntityRequest request = new ExternalEntityRequest();
+    request.setSessionId(SESSION_ID);
+    request.setEntityType(RequestType.CHECK_OVER_LIMIT);
+    CheckOverLimit checkOverLimitRequest = new CheckOverLimit();
+    request.setRequestData(checkOverLimitRequest);
+    ExternalEntityContainer<Boolean> container = new ExternalEntityContainer<>();
+    container.setRequestUid(FIX_UUID);
+    container.setReceiveDate(new Date());
+    container.setData(true);
+    //when
+    requestMap.put(FIX_UUID, request);
+    responseQueue.add(container);
+    //then
+    Assert.assertTrue(responseFlagMap.containsKey(request));
+    LocalKey<CheckOverLimit> localKey = new LocalKey<>(SESSION_ID, checkOverLimitRequest);
+    Assert.assertTrue(checkOverLimitMap.containsKey(localKey));
+    Assert.assertEquals(checkOverLimitMap.get(localKey), container);
+  }
+
+  @Test
+  public void testItemAdded_CheckOverLimit_Bad1() throws Exception {
+    //given
+    ExternalEntityRequest request = new ExternalEntityRequest();
+    request.setSessionId(SESSION_ID);
+    request.setEntityType(RequestType.CHECK_OVER_LIMIT);
+    CheckOverLimit checkOverLimitRequest = new CheckOverLimit();
+    request.setRequestData(checkOverLimitRequest);
+    ExternalEntity container = new ExternalEntity();
+    container.setRequestUid(FIX_UUID);
+    container.setReceiveDate(new Date());
+    //when
+    requestMap.put(FIX_UUID, request);
+    responseQueue.add(container);
+    //then
+    Assert.assertTrue(responseFlagMap.containsKey(request));
+    LocalKey<CheckOverLimit> localKey = new LocalKey<>(SESSION_ID, checkOverLimitRequest);
+    Assert.assertFalse(checkOverLimitMap.containsKey(localKey));
+  }
+
+  @Test
+  public void testItemAdded_WorkplaceInfo() throws Exception {
+    //given
+    ExternalEntityRequest request = new ExternalEntityRequest();
+    request.setSessionId(SESSION_ID);
+    request.setEntityType(RequestType.WORKPLACE_INFO);
+    request.setRequestData(WORKPLACE_ID);
+    Workplace workplace = new Workplace();
+    workplace.setRequestUid(FIX_UUID);
+    workplace.setReceiveDate(new Date());
+    workplace.setId(WORKPLACE_ID);
+    //when
+    requestMap.put(FIX_UUID, request);
+    responseQueue.add(workplace);
+    //then
+    Assert.assertTrue(responseFlagMap.containsKey(request));
+    LocalKey<String> localKey = new LocalKey<>(SESSION_ID, WORKPLACE_ID);
+    Assert.assertTrue(workplaceMap.containsKey(localKey));
+    Assert.assertEquals(workplaceMap.get(localKey), workplace);
+  }
+
+  @Test
+  public void testItemAdded_WorkplaceInfo_Bad() throws Exception {
+    //given
+    ExternalEntityRequest request = new ExternalEntityRequest();
+    request.setSessionId(SESSION_ID);
+    request.setEntityType(RequestType.WORKPLACE_INFO);
+    request.setRequestData(WORKPLACE_ID);
+    ExternalEntity workplace = new ExternalEntity();
+    workplace.setRequestUid(FIX_UUID);
+    workplace.setReceiveDate(new Date());
+    //when
+    requestMap.put(FIX_UUID, request);
+    responseQueue.add(workplace);
+    //then
+    Assert.assertTrue(responseFlagMap.containsKey(request));
+    LocalKey<String> localKey = new LocalKey<>(SESSION_ID, WORKPLACE_ID);
+    Assert.assertFalse(workplaceMap.containsKey(localKey));
   }
 
   @Test

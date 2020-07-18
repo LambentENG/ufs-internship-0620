@@ -307,17 +307,17 @@ public class ResponseListener
         break;
 
       case RequestType.CHECK_OVER_LIMIT:
-        if (entity instanceof CheckOverLimit) {
+        if (entity instanceof ExternalEntityContainer) {
           hazelcastServer.getCheckOverLimitMap().put(
               new LocalKey<>(request.getSessionId(), (CheckOverLimit) request.getRequestData()),
-              (CheckOverLimit) entity);
+              (ExternalEntityContainer<Boolean>) entity);
         }
         break;
 
       case RequestType.WORKPLACE_INFO:
         if (entity instanceof Workplace) {
           hazelcastServer.getWorkplaceMap().put(
-              new LocalKey<>(request.getSessionId(), (Workplace) request.getRequestData()),
+              new LocalKey<>(request.getSessionId(), (String) request.getRequestData()),
               (Workplace) entity);
         }
         break;
