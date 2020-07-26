@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -17,6 +19,8 @@ import ru.philit.ufs.model.entity.user.Subbranch;
 /**
  * Кассовый ордер операции.
  */
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = false)
 @ToString
 @Getter
 @Setter
