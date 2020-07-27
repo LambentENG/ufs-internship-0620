@@ -13,7 +13,7 @@ import ru.philit.ufs.model.entity.esb.asfs.SrvCheckOverLimitRq;
 import ru.philit.ufs.model.entity.esb.asfs.SrvCheckOverLimitRs;
 import ru.philit.ufs.model.entity.esb.asfs.SrvCheckOverLimitRs.SrvCheckOverLimitRsMessage;
 
-public class CheckOverLimitAdapterTest extends AsfsAdapterBaseTest {
+public class CheckOverLimitMapperTest extends AsfsAdapterBaseTest {
 
   private CheckOverLimit checkOverLimit;
   private SrvCheckOverLimitRs response;
@@ -35,9 +35,16 @@ public class CheckOverLimitAdapterTest extends AsfsAdapterBaseTest {
     response.getSrvCheckOverLimitRsMessage().setStatus(LimitStatusType.LIMIT_PASSED);
   }
 
+  private void testWorkplace(CheckOverLimit checkOverLimit) {
+    assertHeaderInfo(checkOverLimit);
+    Assert.assertNotNull(checkOverLimit);
+    Assert.assertTrue(checkOverLimit.getResponseCode(), true);
+    Assert.assertEquals(checkOverLimit.getStatus(), checkOverLimit.getStatus());
+  }
+
   @Test
   public void srvCheckOverLimitRq() {
-    SrvCheckOverLimitRq request = CheckOverLimitAdapter.srvCheckOverLimitRq(checkOverLimit);
+    SrvCheckOverLimitRq request = CheckOverLimitMapper.INSTANCE.srvCheckOverLimitRq(checkOverLimit);
     assertHeaderInfo(request.getHeaderInfo());
     Assert.assertNotNull(request.getSrvCheckOverLimitRqMessage());
     Assert.assertEquals(checkOverLimit.getUserLogin(),
@@ -49,8 +56,8 @@ public class CheckOverLimitAdapterTest extends AsfsAdapterBaseTest {
 
   @Test
   public void testConvertSrvCheckOverLimitRs() {
-    ExternalEntityContainer<Boolean> container = CheckOverLimitAdapter.convert(response);
-    Assert.assertTrue(container.getData());
+    CheckOverLimit checkOverLimit = CheckOverLimitMapper.INSTANCE.convert(response);
+    testWorkplace(checkOverLimit);
   }
 
   @Test

@@ -125,6 +125,7 @@ public abstract class CashOrderMapper extends AsfsAdapter {
   public abstract CashOrder convert(SrvUpdStCashOrderRs response);
 
   @Mappings({
+      @Mapping(target = "headerInfo", expression = "java(headerInfo())"),
       @Mapping(source = "cashOrderId",
           target = "srvCreateCashOrderRqMessage.cashOrderId"),
       @Mapping(source = "operationType",
@@ -204,6 +205,7 @@ public abstract class CashOrderMapper extends AsfsAdapter {
   abstract IdentityDocumentType identityDocumentType(IdentityDocument identityDocument);
 
   @Mappings({
+      @Mapping(target = "headerInfo", expression = "java(headerInfo())"),
       @Mapping(source = "cashOrderId",
           target = "srvUpdCashOrderRqMessage.cashOrderId"),
       @Mapping(source = "cashOrderStatus",
