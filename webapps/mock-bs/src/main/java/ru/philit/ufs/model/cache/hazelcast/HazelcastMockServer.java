@@ -49,6 +49,10 @@ public class HazelcastMockServer {
    */
   @Getter private IMap<Long, PkgTaskStatusType> taskStatuses;
   /**
+   * Данные кассового ордера.
+   */
+  @Getter private IMap<String, String> cashOrderById;
+  /**
    * Данные пакетов операций.
    */
   @Getter private IMap<Long, OperationPackageInfo> packageById;
@@ -98,6 +102,7 @@ public class HazelcastMockServer {
     tasksAccountWithdrawByPackageId = instance.getMap("tasksAccountWithdrawByPackageId");
     tasksCheckbookIssuingByPackageId = instance.getMap("tasksCheckbookIssuingByPackageId");
     taskStatuses = instance.getMap("taskStatuses");
+    cashOrderById = instance.getMap("cashOrderById");
     packageById = instance.getMap("packageById");
     packageIdByInn = instance.getMap("packageIdByInn");
   }

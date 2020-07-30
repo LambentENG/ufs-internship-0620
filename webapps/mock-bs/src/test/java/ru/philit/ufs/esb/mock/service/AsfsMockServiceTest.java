@@ -36,7 +36,7 @@ public class AsfsMockServiceTest {
   @Test
   public void testProcessMessage_SrvCreateCashOrderRq() throws Exception {
     String requestMessage = "<SrvCreateCashOrderRq><HeaderInfo/>"
-        + "<SrvCreateCashOrderRqMessage>"
+        + "<SrvCreateCashOrderRqMessage/>"
         + "<cashOrderId>someId</cashOrderId>"
         + "<operationType>someType</operationType>"
         + "<cashOrderINum>someINum</cashOrderINum>"
@@ -48,13 +48,13 @@ public class AsfsMockServiceTest {
         + "<workPlaceUId>someUID</workPlaceUId>"
         + "<repData>repData</repData>"
         + "<additionalInfo>additionalInfo</additionalInfo>"
-        + "</SrvCreateCashOrderRqMessage></SrvCreateCashOrderRq>";
+        + "</SrvCreateCashOrderRq>";
     assertTrue(service.processMessage(requestMessage));
   }
 
   @Test
   public void testProcessMessage_SrvUpdStCashOrderRq() throws Exception {
-    String requestMessage = "<SrvUpdStCashOrderRq><HeaderInfo/>"
+    String requestMessage = "<SrvUpdStCashOrderRq><HeaderInfo/><SrvUpdCashOrderRqMessage/>"
         + "<SrvUpdStCashOrderRq>"
         + "<cashOrderId>id</cashOrderId>"
         + "<cashOrderStatus>status</cashOrderStatus>"
@@ -64,7 +64,8 @@ public class AsfsMockServiceTest {
 
   @Test
   public void testProcessMessage_SrvCheckOverLimitRq() throws Exception {
-    String requestMessage = "<SrvCheckOverLimitRq><HeaderInfo/></SrvCheckOverLimitRq>";
+    String requestMessage = "<SrvCheckOverLimitRq><HeaderInfo/>"
+        + "<SrvCheckOverLimitRqMessage/></SrvCheckOverLimitRq>";
     assertTrue(service.processMessage(requestMessage));
   }
 

@@ -187,7 +187,7 @@ public class HazelcastCacheImpl
 
   @Override
   public Boolean checkOverLimit(CheckOverLimit request, ClientInfo clientInfo) {
-    ExternalEntityContainer<Boolean> container = requestData(
+    ExternalEntityContainer<Boolean> container = requestDataFromExternal(
         request, client.getCheckOverLimitMap(), CHECK_OVER_LIMIT, clientInfo
     );
     return container.getData();
@@ -333,14 +333,14 @@ public class HazelcastCacheImpl
 
   @Override
   public CashOrder createCashOrder(CashOrder cashOrder, ClientInfo clientInfo) {
-    return requestData(
+    return requestDataFromExternal(
       cashOrder, client.getCashOrderMap(), CREATE_CASH_ORDER, clientInfo
     );
   }
 
   @Override
   public CashOrder updateStatusCashOrder(CashOrder cashOrder, ClientInfo clientInfo) {
-    return requestData(
+    return requestDataFromExternal(
       cashOrder, client.getCashOrderMap(), UPDATE_CASH_ORDER_STATUS, clientInfo
     );
   }

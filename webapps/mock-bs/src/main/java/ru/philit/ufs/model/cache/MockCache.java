@@ -1,8 +1,12 @@
 package ru.philit.ufs.model.cache;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import ru.philit.ufs.model.entity.esb.asfs.CashOrderStatusType;
+import ru.philit.ufs.model.entity.esb.asfs.LimitStatusType;
+import ru.philit.ufs.model.entity.esb.asfs.SrvCreateCashOrderRq.SrvCreateCashOrderRqMessage;
 import ru.philit.ufs.model.entity.esb.eks.PkgTaskStatusType;
 import ru.philit.ufs.model.entity.esb.eks.SrvGetTaskClOperPkgRs.SrvGetTaskClOperPkgRsMessage;
 import ru.philit.ufs.model.entity.oper.OperationPackageInfo;
@@ -34,4 +38,9 @@ public interface MockCache {
         searchTasksCardDeposit(Long packageId, PkgTaskStatusType taskStatus, Date fromDate,
         Date toDate, List<Long> taskIds);
 
+  void createCashOrder(SrvCreateCashOrderRqMessage cashOrderBody);
+
+  void updateStatusCashOrder(String cashOrderId, CashOrderStatusType cashOrderStatus);
+
+  LimitStatusType checkOverLimit(String userLogin, boolean isTobeIncreased, BigDecimal amount);
 }

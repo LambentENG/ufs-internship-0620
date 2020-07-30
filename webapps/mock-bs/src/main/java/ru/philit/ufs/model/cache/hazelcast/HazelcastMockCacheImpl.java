@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hazelcast.core.IMap;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
@@ -23,6 +24,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import ru.philit.ufs.model.cache.MockCache;
+import ru.philit.ufs.model.entity.esb.asfs.CashOrderStatusType;
+import ru.philit.ufs.model.entity.esb.asfs.LimitStatusType;
+import ru.philit.ufs.model.entity.esb.asfs.SrvCreateCashOrderRq.SrvCreateCashOrderRqMessage;
 import ru.philit.ufs.model.entity.esb.eks.PkgStatusType;
 import ru.philit.ufs.model.entity.esb.eks.PkgTaskStatusType;
 import ru.philit.ufs.model.entity.esb.eks.SrvGetTaskClOperPkgRs.SrvGetTaskClOperPkgRsMessage;
@@ -40,6 +44,8 @@ public class HazelcastMockCacheImpl implements MockCache {
   private final ObjectMapper jsonMapper;
 
   private Pattern createDatePattern = Pattern.compile("\"createdDttm\":(\\d+)");
+  private Pattern checkOverLimitPattern = Pattern
+      .compile("\\{\"orderCreated\":(\\d+).+\"amount\":(\\d+\\.?(\\d+)?)");
 
   /**
    * Конструктор бина.
@@ -171,6 +177,62 @@ public class HazelcastMockCacheImpl implements MockCache {
       }
     }
     return targetLists;
+  }
+
+  @Override
+  public void createCashOrder(SrvCreateCashOrderRqMessage cashOrderBody) {
+    create(hazelcastServer.getCashOrderById(), cashOrderBody);
+  }
+
+  private void create(IMap<String, String> cashOrderData,
+      SrvCreateCashOrderRqMessage cashOrderBody) {
+    String id = cashOrderBody.getCashOrderId();
+    cashOrderData.put(id, cashOrderBody.toString());
+  }
+
+  @Override
+  public void updateStatusCashOrder(String cashOrderId,
+      CashOrderStatusType cashOrderStatus) {
+    update(hazelcastServer.getCashOrderById(), cashOrderId, cashOrderStatus);
+  }
+
+  private void update(IMap<String, String> cashOrderData, String cashOrderId,
+      CashOrderStatusType cashOrderStatus) {
+    if (cashOrderData.containsKey(cashOrderId)) {
+      String id = cashOrderData.get(cashOrderId);
+      if (cashOrderStatus.equals(CashOrderStatusType.fromValue(cashOrderStatus.value()))) {
+        cashOrderData.put(id, cashOrderStatus.toString());
+      }
+    }
+  }
+
+  @Override
+  public LimitStatusType checkOverLimit(String userLogin, boolean isTobeIncreased,
+      BigDecimal amount) {
+    return checkLimit(hazelcastServer.getCashOrderById(), userLogin, isTobeIncreased, amount);
+  }
+
+  private LimitStatusType checkLimit(IMap<String, String> cashOrderData, String userLogin,
+      boolean isTobeIncreased, BigDecimal amount) {
+    BigDecimal sum = BigDecimal.valueOf(0L);
+    Date date = truncateTime(new Date());
+    for (String value : cashOrderData.values()) {
+      if (value.contains(userLogin) & isTobeIncreased) {
+        Matcher matcher = checkOverLimitPattern.matcher(value);
+        if (matcher.find()) {
+          Date createCashOrderDate = new Date(Long.parseLong(matcher.group(1)));
+          if (createCashOrderDate.after(date)) {
+            BigDecimal cashOrderAmount = new BigDecimal(matcher.group(2));
+            sum = sum.add(cashOrderAmount);
+            if (sum.compareTo(amount) <= 0) {
+              return LimitStatusType.LIMIT_PASSED;
+            }
+          }
+        }
+      }
+      return LimitStatusType.LIMIT_ERROR;
+    }
+    return LimitStatusType.LIMIT_PASSED;
   }
 
   private List<String> searchTasks(Map<Long, String> tasks, PkgTaskStatusType taskStatus,

@@ -109,7 +109,6 @@ public class AsfsMockService extends CommonMockService implements MessageProcess
     ko1.setINN("INN");
     ko1.setAmount(BigDecimal.valueOf(777L));
     ko1.setAccountId("AccountId");
-    ko1.setCashSymbols(new CashSymbols());
     ko1.setSenderBank("SenderBank");
     ko1.setSenderBankBIC("SenderBankBIC");
     ko1.setRecipientBank("RecipientBank");
@@ -119,7 +118,10 @@ public class AsfsMockService extends CommonMockService implements MessageProcess
     ko1.setOperatorPosition("OperatorPosition");
     ko1.setUserFullName("UserFullName");
     ko1.setUserPosition("UserPosition");
+    ko1.setCashSymbols(new CashSymbols());
+    ko1.getCashSymbols().getCashSymbolItem();
     response.getSrvCreateCashOrderRsMessage().setKO1(ko1);
+    mockCache.createCashOrder(request.getSrvCreateCashOrderRqMessage());
     return response;
   }
 
@@ -133,6 +135,9 @@ public class AsfsMockService extends CommonMockService implements MessageProcess
     response.getSrvUpdCashOrderRsMessage().setCashOrderINum("cashOrderINum");
     response.getSrvUpdCashOrderRsMessage().setCashOrderStatus(CashOrderStatusType.CREATED);
     response.getSrvUpdCashOrderRsMessage().setCashOrderType(CashOrderType.KO_1);
+    String cashOrderId = request.getSrvUpdCashOrderRqMessage().getCashOrderId();
+    mockCache.updateStatusCashOrder(cashOrderId,
+        request.getSrvUpdCashOrderRqMessage().getCashOrderStatus());
     return response;
   }
 
@@ -140,9 +145,13 @@ public class AsfsMockService extends CommonMockService implements MessageProcess
     SrvCheckOverLimitRs response = new SrvCheckOverLimitRs();
     response.setHeaderInfo(copyHeaderInfo(request.getHeaderInfo()));
     response.setSrvCheckOverLimitRsMessage(new SrvCheckOverLimitRsMessage());
-
     response.getSrvCheckOverLimitRsMessage().setResponseCode("ResponseCode");
-    response.getSrvCheckOverLimitRsMessage().setStatus(LimitStatusType.LIMIT_PASSED);
+    String userLogin = request.getSrvCheckOverLimitRqMessage().getUserLogin();
+    boolean isTobeIncreased = request.getSrvCheckOverLimitRqMessage().isTobeIncreased();
+    BigDecimal amount = request.getSrvCheckOverLimitRqMessage().getAmount();
+    LimitStatusType limitStatusType = mockCache.checkOverLimit(userLogin,
+        isTobeIncreased, amount);
+    response.getSrvCheckOverLimitRsMessage().setStatus(limitStatusType);
     return response;
   }
 
