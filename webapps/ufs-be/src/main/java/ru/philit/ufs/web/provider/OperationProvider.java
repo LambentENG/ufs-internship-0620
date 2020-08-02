@@ -8,6 +8,7 @@ import org.springframework.util.StringUtils;
 import ru.philit.ufs.model.cache.MockCache;
 import ru.philit.ufs.model.cache.OperationCache;
 import ru.philit.ufs.model.entity.account.Representative;
+import ru.philit.ufs.model.entity.cash.CashOrder;
 import ru.philit.ufs.model.entity.oper.Operation;
 import ru.philit.ufs.model.entity.oper.OperationPackage;
 import ru.philit.ufs.model.entity.oper.OperationPackageRequest;
@@ -27,6 +28,7 @@ public class OperationProvider {
   private final RepresentativeProvider representativeProvider;
   private final OperationCache cache;
   private final MockCache mockCache;
+  private final CashOrder cashOrder = new CashOrder();
 
   /**
    * Конструктор бина.
@@ -146,6 +148,7 @@ public class OperationProvider {
    * @param clientInfo информация о клиенте
    * @return информация об операции
    */
+
   public Operation confirmOperation(Long packageId, Long taskId, String workplaceId,
       String operationTypeCode, ClientInfo clientInfo) {
     if (packageId == null) {
@@ -184,8 +187,10 @@ public class OperationProvider {
 
     Operation operation = mockCache.createOperation(workplaceId, operationTypeCode);
     operation = mockCache.commitOperation(operation);
+    cache.createCashOrder(cashOrder, clientInfo);
+    cache.updateStatusCashOrder(cashOrder,clientInfo);
+    operation.setCashOrderId(cashOrder.getCashOrderId());
     cache.addOperation(taskId, operation);
-
     return operation;
   }
 

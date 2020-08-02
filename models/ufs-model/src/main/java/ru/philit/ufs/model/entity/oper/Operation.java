@@ -18,6 +18,7 @@ import ru.philit.ufs.model.entity.common.OperationTypeCode;
 public class Operation extends ExternalEntity {
 
   private String id;
+  private String cashOrderId;
   private OperationStatus status;
   private OperationTypeCode typeCode;
   private String workplaceId;

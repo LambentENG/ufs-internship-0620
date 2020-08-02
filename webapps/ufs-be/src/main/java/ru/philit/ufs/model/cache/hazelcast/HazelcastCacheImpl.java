@@ -267,7 +267,6 @@ public class HazelcastCacheImpl
 
   }
 
-
   @Override
   public void addUser(String sessionId, User user) {
     client.getUserBySessionMap().put(sessionId, user);

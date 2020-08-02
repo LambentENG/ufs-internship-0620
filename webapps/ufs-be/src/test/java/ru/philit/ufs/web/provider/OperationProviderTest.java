@@ -22,6 +22,7 @@ import org.mockito.Spy;
 import ru.philit.ufs.model.cache.MockCache;
 import ru.philit.ufs.model.cache.OperationCache;
 import ru.philit.ufs.model.cache.mock.MockCacheImpl;
+import ru.philit.ufs.model.entity.cash.CashOrder;
 import ru.philit.ufs.model.entity.common.OperationTypeCode;
 import ru.philit.ufs.model.entity.oper.Operation;
 import ru.philit.ufs.model.entity.oper.OperationPackage;
@@ -161,6 +162,7 @@ public class OperationProviderTest {
     OperationTask task2 = new OperationTask();
     task2.setId(TASK_ID);
     OperationPackage opPackage = new OperationPackage();
+    final CashOrder cashOrder = new CashOrder();
     opPackage.setToCardDeposits(Arrays.asList(task1, task2));
 
     // when
@@ -168,6 +170,10 @@ public class OperationProviderTest {
         .thenReturn(opPackage);
     when(cache.updateTasksInPackage(any(OperationPackage.class), any(ClientInfo.class)))
         .thenReturn(opPackage);
+    when(cache.createCashOrder(any(CashOrder.class), any(ClientInfo.class)))
+        .thenReturn(cashOrder);
+    when(cache.updateStatusCashOrder(any(CashOrder.class), any(ClientInfo.class)))
+        .thenReturn(cashOrder);
     doNothing().when(cache)
         .addOperation(anyLong(), any(Operation.class));
     provider.confirmOperation(PACKAGE_ID, TASK_ID, WORKPLACE_ID, TYPE_CODE, CLIENT_INFO);
@@ -177,6 +183,10 @@ public class OperationProviderTest {
         .getTasksInPackage(any(OperationTasksRequest.class), any(ClientInfo.class));
     verify(cache, times(1))
         .updateTasksInPackage(any(OperationPackage.class), any(ClientInfo.class));
+    verify(cache, times(1))
+        .createCashOrder(any(CashOrder.class), any(ClientInfo.class));
+    verify(cache, times(1))
+        .updateStatusCashOrder(any(CashOrder.class), any(ClientInfo.class));
     verify(cache, times(1))
         .addOperation(anyLong(), any(Operation.class));
     verifyNoMoreInteractions(cache);
@@ -250,6 +260,10 @@ public class OperationProviderTest {
         .getTasksInPackage(any(OperationTasksRequest.class), any(ClientInfo.class));
     verify(cache, times(1))
         .updateTasksInPackage(any(OperationPackage.class), any(ClientInfo.class));
+    verify(cache, times(1))
+        .createCashOrder(any(CashOrder.class), any(ClientInfo.class));
+    verify(cache, times(1))
+        .updateStatusCashOrder(any(CashOrder.class), any(ClientInfo.class));
     verify(cache, times(1))
         .addOperation(anyLong(), any(Operation.class));
     verifyNoMoreInteractions(cache);
