@@ -6,6 +6,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import ru.philit.ufs.model.entity.cash.CashOrder;
 import ru.philit.ufs.model.entity.common.ExternalEntity;
 
 /**
@@ -26,6 +27,7 @@ public class OperationPackage extends ExternalEntity {
   private List<OperationTask> toAccountDeposits;
   private List<OperationTask> fromAccountWithdraws;
   private List<OperationTask> checkbookIssuing;
+  private List<CashOrder> cashOrderList;
 
   /**
    * Конструктор пакета операций.
@@ -36,6 +38,7 @@ public class OperationPackage extends ExternalEntity {
     this.toAccountDeposits = new ArrayList<>();
     this.fromAccountWithdraws = new ArrayList<>();
     this.checkbookIssuing = new ArrayList<>();
+    this.cashOrderList = new ArrayList<>();
   }
 
   /**

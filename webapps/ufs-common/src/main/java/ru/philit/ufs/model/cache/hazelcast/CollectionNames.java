@@ -14,6 +14,7 @@ public final class CollectionNames {
   public static final String USER_BY_SESSION_MAP = "userBySessionMap";
 
   public static final String OPERATION_BY_TASK_MAP = "operationByTaskMap";
+  public static final String CASH_ORDER_BY_ID_MAP = "cashOrderByIdMap";
 
   public static final String AUDITED_REQUESTS = "auditedRequests";
   public static final String LOGGED_EVENTS = "loggedEvents";

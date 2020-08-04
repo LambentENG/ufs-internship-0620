@@ -22,6 +22,8 @@ public interface OperationCache {
 
   Operation getOperation(Long taskId);
 
+  CashOrder getCashOrderId(String cashOrderId);
+
   void addOperation(Long taskId, Operation operation);
 
   OperationPackage getPackage(OperationPackageRequest request, ClientInfo clientInfo);

@@ -17,6 +17,7 @@ import ru.philit.ufs.model.entity.common.ExternalEntity;
 public class OperationTask extends ExternalEntity {
 
   protected Long id;
+  protected Long cashOrderId;
   protected OperationTaskStatus status;
   protected Long responseCode;
   private Date createdDate;

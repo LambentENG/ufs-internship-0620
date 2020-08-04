@@ -199,6 +199,11 @@ public class HazelcastCacheImpl
   }
 
   @Override
+  public CashOrder getCashOrderId(String cashOrderId) {
+    return client.getCashOrderByIdMap().get(cashOrderId);
+  }
+
+  @Override
   public void addOperation(Long taskId, Operation operation) {
     client.getOperationByTaskMap().put(taskId, operation);
   }

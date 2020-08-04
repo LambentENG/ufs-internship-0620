@@ -13,6 +13,7 @@ import ru.philit.ufs.model.cache.MockCache;
 import ru.philit.ufs.model.cache.OperationCache;
 import ru.philit.ufs.model.cache.UserCache;
 import ru.philit.ufs.model.entity.account.AccountOperationRequest;
+import ru.philit.ufs.model.entity.cash.CashOrder;
 import ru.philit.ufs.model.entity.oper.Operation;
 import ru.philit.ufs.model.entity.oper.OperationPackage;
 import ru.philit.ufs.model.entity.oper.OperationTask;
@@ -96,6 +97,19 @@ public class ReportProvider {
       throw new InvalidDataException("Не указана задача операции");
     }
     return operationCache.getOperation(task.getId());
+  }
+
+  /**
+   * Получение кассового ордера.
+   *
+   * @param cashOrderId идентификатор кассового ордера
+   * @return кассовый ордер клиента
+   */
+  public CashOrder getCashOrderId(CashOrder cashOrderId) {
+    if (cashOrderId == null) {
+      throw new InvalidDataException("Кассовый ордер не получен");
+    }
+    return operationCache.getCashOrderId(cashOrderId.getCashOrderId());
   }
 
   /**

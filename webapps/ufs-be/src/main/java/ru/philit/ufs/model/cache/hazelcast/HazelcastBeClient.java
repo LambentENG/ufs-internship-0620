@@ -4,6 +4,7 @@ import static ru.philit.ufs.model.cache.hazelcast.CollectionNames.ACCOUNT_20202_
 import static ru.philit.ufs.model.cache.hazelcast.CollectionNames.ACCOUNT_BY_CARD_NUMBER_MAP;
 import static ru.philit.ufs.model.cache.hazelcast.CollectionNames.ACCOUNT_RESIDUES_BY_ID_MAP;
 import static ru.philit.ufs.model.cache.hazelcast.CollectionNames.AUDITED_REQUESTS;
+import static ru.philit.ufs.model.cache.hazelcast.CollectionNames.CASH_ORDER_BY_ID_MAP;
 import static ru.philit.ufs.model.cache.hazelcast.CollectionNames.CASH_ORDER_MAP;
 import static ru.philit.ufs.model.cache.hazelcast.CollectionNames.CASH_SYMBOLS_MAP;
 import static ru.philit.ufs.model.cache.hazelcast.CollectionNames.CHECK_OVER_LIMIT_MAP;
@@ -96,6 +97,9 @@ public class HazelcastBeClient {
   private IMap<Long, Operation> operationByTaskMap;
 
   @Getter
+  private IMap<String, CashOrder> cashOrderByIdMap;
+
+  @Getter
   private IList<AuditEntity> auditedRequests;
   @Getter
   private IList<LogEntity> loggedEvents;
@@ -172,6 +176,7 @@ public class HazelcastBeClient {
 
     userBySessionMap = instance.getMap(USER_BY_SESSION_MAP);
 
+    cashOrderByIdMap = instance.getMap(CASH_ORDER_BY_ID_MAP);
     operationByTaskMap = instance.getMap(OPERATION_BY_TASK_MAP);
 
     auditedRequests = instance.getList(AUDITED_REQUESTS);
