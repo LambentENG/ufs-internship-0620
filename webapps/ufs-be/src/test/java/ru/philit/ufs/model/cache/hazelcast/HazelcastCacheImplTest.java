@@ -97,11 +97,16 @@ public class HazelcastCacheImplTest {
       new MockIMap<>();
   private final IMap<LocalKey<String>, Representative> representativeByCardNumberMap =
       new MockIMap<>();
-  private final IMap<LocalKey<String>, Operator> operatorByUserMap = new MockIMap<>();
-  private IMap<LocalKey<CashOrder>, CashOrder> cashOrderMap = new MockIMap<>();
-  private IMap<LocalKey<CheckOverLimit>, ExternalEntityContainer<Boolean>>
-      checkOverLimitMap = new MockIMap<>();
-  private IMap<LocalKey<String>, Workplace> workplaceMap = new MockIMap<>();
+  private final IMap<LocalKey<String>, Operator> operatorByUserMap =
+      new MockIMap<>();
+  private final IMap<LocalKey<CashOrder>, CashOrder> cashOrderMap =
+      new MockIMap<>();
+  private final IMap<LocalKey<CheckOverLimit>, ExternalEntityContainer<Boolean>> checkOverLimitMap =
+      new MockIMap<>();
+  private final IMap<LocalKey<String>, Workplace> workplaceMap =
+      new MockIMap<>();
+  private final IMap<LocalKey<String>, CashOrder> cashOrderByIdMap =
+      new MockIMap<>();
 
 
   @Mock
@@ -204,6 +209,9 @@ public class HazelcastCacheImplTest {
           case RequestType.CREATE_CASH_ORDER:
           case RequestType.UPDATE_CASH_ORDER_STATUS:
             cashOrderMap.put(key, new CashOrder());
+            break;
+          case RequestType.CASH_ORDER_BY_ID:
+            cashOrderByIdMap.put(key, new CashOrder());
             break;
           case RequestType.CHECK_OVER_LIMIT:
             checkOverLimitMap.put(key, new ExternalEntityContainer<>(true));

@@ -269,7 +269,6 @@ public class HazelcastCacheImpl
     return requestData(
       workplaceId, client.getWorkplaceMap(), WORKPLACE_INFO, clientInfo
     );
-
   }
 
   @Override

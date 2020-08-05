@@ -6,6 +6,7 @@ import static ru.philit.ufs.model.cache.hazelcast.CollectionNames.ACCOUNT_BY_CAR
 import static ru.philit.ufs.model.cache.hazelcast.CollectionNames.ACCOUNT_BY_ID_MAP;
 import static ru.philit.ufs.model.cache.hazelcast.CollectionNames.ACCOUNT_RESIDUES_BY_ID_MAP;
 import static ru.philit.ufs.model.cache.hazelcast.CollectionNames.AUDITED_REQUESTS;
+import static ru.philit.ufs.model.cache.hazelcast.CollectionNames.CASH_ORDER_BY_ID_MAP;
 import static ru.philit.ufs.model.cache.hazelcast.CollectionNames.CASH_ORDER_MAP;
 import static ru.philit.ufs.model.cache.hazelcast.CollectionNames.CASH_SYMBOLS_MAP;
 import static ru.philit.ufs.model.cache.hazelcast.CollectionNames.CHECK_FRAUD_BY_ACCOUNT_OPERATION_MAP;
@@ -128,6 +129,11 @@ public class HazelcastServer {
    * Коллекция операций задач.
    */
   @Getter private IMap<Long, Operation> operationByTaskMap;
+
+  /**
+   * Коллекция идентификаторов кассовых ордеров.
+   */
+  @Getter private IMap<String, CashOrder> cashOrderByIdMap;
 
   /**
    * Коллекция запросов аудита.
@@ -254,8 +260,8 @@ public class HazelcastServer {
         PAY_ORDERS_CARD_INDEX_1_BY_ACCOUNT_MAP, PAY_ORDERS_CARD_INDEX_2_BY_ACCOUNT_MAP,
         COMMISSION_BY_ACCOUNT_OPERATION_MAP, CHECK_FRAUD_BY_ACCOUNT_OPERATION_MAP,
         OVN_BY_UID_MAP, OVNS_MAP, ACCOUNT_20202_BY_WORK_PLACE_MAP, OPERATION_TYPES_BY_ROLES_MAP,
-        REPRESENTATIVE_MAP, REPRESENTATIVE_BY_CARD_MAP, OPERATOR_BY_USER_MAP, CASH_SYMBOLS_MAP,
-        CASH_ORDER_MAP, CHECK_OVER_LIMIT_MAP, WORKPLACE_INFO_MAP}) {
+        REPRESENTATIVE_MAP, REPRESENTATIVE_BY_CARD_MAP, OPERATOR_BY_USER_MAP, CASH_ORDER_BY_ID_MAP,
+        CASH_SYMBOLS_MAP, CASH_ORDER_MAP, CHECK_OVER_LIMIT_MAP, WORKPLACE_INFO_MAP}) {
       MapConfig mapConfig = new MapConfig();
       mapConfig.setName(mapName);
       mapConfig.setTimeToLiveSeconds(3600);
@@ -301,6 +307,7 @@ public class HazelcastServer {
 
     representativeByCardMap = instance.getMap(REPRESENTATIVE_BY_CARD_MAP);
     operatorByUserMap = instance.getMap(OPERATOR_BY_USER_MAP);
+    cashOrderByIdMap = instance.getMap(CASH_ORDER_BY_ID_MAP);
     cashSymbolsMap = instance.getMap(CASH_SYMBOLS_MAP);
 
     cashOrderMap = instance.getMap(CASH_ORDER_MAP);

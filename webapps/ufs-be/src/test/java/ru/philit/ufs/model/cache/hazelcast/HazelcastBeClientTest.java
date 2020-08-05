@@ -79,6 +79,7 @@ public class HazelcastBeClientTest {
     hazelcastBeClient.getCashOrderMap();
     hazelcastBeClient.getCheckOverLimitMap();
     hazelcastBeClient.getWorkplaceMap();
+    hazelcastBeClient.getCashOrderByIdMap();
   }
 
   @Test
